@@ -124,42 +124,41 @@ const dummyTabelle2 = {
 
 const dummyTabelle3 = {
   spieltag: 3,
-  mannschaften: {
-    0: {
+  mannschaften: [
+    {
       id: 0,
       spiele: 34,
       tore: 97,
       gegentore: 37,
       punkte: 77
-    },
-    1: {
+    },{
       id: 1,
       spiele: 34,
       tore: 85,
       gegentore: 52,
       punkte: 69
     }
-  }
+  ]
 }
 
 function mannschaftComparator(mannschaft0, mannschaft1) {
   if (mannschaft0.punkte > mannschaft1.punkte) {
-    return 1
-  } else if (mannschaft0.punkte < mannschaft1.punkte) {
     return -1
+  } else if (mannschaft0.punkte < mannschaft1.punkte) {
+    return 1
   } else {
     const tordifferenz0 = mannschaft0.tore - mannschaft0.gegentore
     const tordifferenz1 = mannschaft1.tore - mannschaft1.gegentore
 
     if (tordifferenz0 > tordifferenz1) {
-      return 1
-    } else if (tordifferenz0 < tordifferenz1) {
       return -1
+    } else if (tordifferenz0 < tordifferenz1) {
+      return 1
     } else {
       if (mannschaft0.tore > mannschaft1.tore) {
-        return 1
-      } else if (mannschaft0.tore < mannschaft1.tore) {
         return -1
+      } else if (mannschaft0.tore < mannschaft1.tore) {
+        return 1
       } else {
         return 0
       }
@@ -170,28 +169,42 @@ function mannschaftComparator(mannschaft0, mannschaft1) {
 function fillTabelle(spieltage, spieltagnummer) {
   const tabelle = {
     spieltag: 0,
-    mannschaften: {}
+    mannschaften: []
   }
   for (const id of Object.keys(mannschaften)) {
-    tabelle.mannschaften[id] = {
+    tabelle.mannschaften.push({
       id: id,
       spiele: 0,
       tore: 0,
       gegentore: 0,
       punkte: 0
-    }
+    })
   }
   for (let i = 0; i <= spieltagnummer; i++) {
     addSpieltagToTabelle(tabelle, spieltage[i])
   }
 
-console.log(tabelle)
+  tabelle.mannschaften.sort(mannschaftComparator)
 
-  const sortedMannschaften = tabelle.mannschaften.sort(mannschaftComparator)
-console.log(tabelle)
+  const nameElementCells = document.querySelectorAll('.tabelle [data-index="1"] cell')
+  for (let i = 0; i < tabelle.mannschaften.length; i++) {
+    nameElementCells[i + 1].textContent = mannschaften[tabelle.mannschaften[i].id].name
+  }
 
-  const nameElement = document.querySelector('.tabelle [data-index="1"]')
-  //console.log(nameElement)
+  const spieleElementCells = document.querySelectorAll('.tabelle [data-index="2"] cell')
+  for (let i = 0; i < tabelle.mannschaften.length; i++) {
+    spieleElementCells[i + 1].textContent = tabelle.mannschaften[i].spiele
+  }
+
+  const toreElementCells = document.querySelectorAll('.tabelle [data-index="3"] cell')
+  for (let i = 0; i < tabelle.mannschaften.length; i++) {
+    toreElementCells[i + 1].textContent = tabelle.mannschaften[i].tore + ":" + tabelle.mannschaften[i].gegentore
+  }
+
+  const punkteElementCells = document.querySelectorAll('.tabelle [data-index="4"] cell')
+  for (let i = 0; i < tabelle.mannschaften.length; i++) {
+    punkteElementCells[i + 1].textContent = tabelle.mannschaften[i].punkte
+  }
 }
 
 const saisons = createTestspiele()
