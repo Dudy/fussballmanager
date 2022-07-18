@@ -13,9 +13,14 @@ const mannschaften = {
   },
   4: {
     name: "Eintracht Frankfurt"
+  },
+  5: {
+    name: "Mainz05"
   }
 }
 const anzahlMannschaften = Object.keys(mannschaften).length
+const anzahlSpieleProSpieltag = anzahlMannschaften / 2
+const anzahlSpieltage = (anzahlMannschaften - 1) * 2
 
 function createTestspiele() {
   const saisons = {
@@ -30,13 +35,13 @@ function createTestspiele() {
 
   let datum = new Date("2022-08-06T13:30:00Z")
 
-  for (let spieltagIndex = 0; spieltagIndex < 5; spieltagIndex++) {
+  for (let spieltagIndex = 0; spieltagIndex < anzahlSpieltage; spieltagIndex++) {
     const spieltag = {
       spiele: {}
     }
     saison.spieltage[spieltagIndex] = spieltag
 
-    for (let spielIndex = 0; spielIndex < 4; spielIndex++) {
+    for (let spielIndex = 0; spielIndex < anzahlSpieleProSpieltag; spielIndex++) {
       const indexHeim = Math.floor(Math.random() * anzahlMannschaften)
       let indexGast = Math.floor(Math.random() * anzahlMannschaften)
       while (indexGast === indexHeim) {
@@ -207,7 +212,33 @@ function fillTabelle(spieltage, spieltagnummer) {
   }
 }
 
+function fillSpieltag(spieltage, spieltagnummer) {
+  document.querySelector('.spieltag p2 span').textContent = spieltagnummer + 1 // in code we start with 0, but on the display the first day is "1"
+
+  let cellElements = document.querySelectorAll('.spieltag [data-index="0"] cell')
+  for (let i = 0; i < Object.keys(spieltage[spieltagnummer].spiele).length; i++) {
+    cellElements[i + 1].textContent = spieltage[spieltagnummer].spiele[i].datum.toLocaleDateString('DE-de', { day: '2-digit', month: '2-digit', year: 'numeric'})
+  }
+
+  cellElements = document.querySelectorAll('.spieltag [data-index="1"] cell')
+  for (let i = 0; i < Object.keys(spieltage[spieltagnummer].spiele).length; i++) {
+    cellElements[i + 1].textContent = mannschaften[spieltage[spieltagnummer].spiele[i].heim].name
+  }
+
+  // Ergebnis
+  cellElements = document.querySelectorAll('.spieltag [data-index="2"] cell')
+  for (let i = 0; i < Object.keys(spieltage[spieltagnummer].spiele).length; i++) {
+    cellElements[i + 1].textContent = spieltage[spieltagnummer].spiele[i].toreHeim + ":" + spieltage[spieltagnummer].spiele[i].toreGast
+  }
+
+  cellElements = document.querySelectorAll('.spieltag [data-index="3"] cell')
+  for (let i = 0; i < Object.keys(spieltage[spieltagnummer].spiele).length; i++) {
+    cellElements[i + 1].textContent = mannschaften[spieltage[spieltagnummer].spiele[i].gast].name
+  }
+}
+
 const saisons = createTestspiele()
 //console.log(saisons)
 
 fillTabelle(saisons[2022].spieltage, 2)
+fillSpieltag(saisons[2022].spieltage, 2)
