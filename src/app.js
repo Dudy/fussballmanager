@@ -1,26 +1,73 @@
 const mannschaften = {
   0: {
-    name: "Bayern München"
+    name: "Arminia Bielefeld"
   },
   1: {
-    name: "Borussia Dortmund"
+    name: "1. FSV Mainz 05"
   },
   2: {
-    name: "Bayer 04 Leverkusen"
+    name: "VfB Stuttgart"
   },
   3: {
-    name: "RB Leipzig"
+    name: "1. FC Kaiserslautern"
   },
   4: {
-    name: "Eintracht Frankfurt"
+    name: "Borussia Dortmund"
   },
   5: {
-    name: "Mainz05"
+    name: "Borussia Mönchengladbach"
+  },
+  6: {
+    name: "Bayer 04 Leverkusen"
+  },
+  7: {
+    name: "Hertha BSC"
+  },
+  8: {
+    name: "1. FC Nürnberg"
+  },
+  9: {
+    name: "Hannover 96"
+  },
+  10: {
+    name: "Eintracht Frankfurt"
+  },
+  11: {
+    name: "FC Bayern München"
+  },
+  12: {
+    name: "VfL Wolfsburg"
+  },
+  13: {
+    name: "FC Schalke 04"
+  },
+  14: {
+    name: "MSV Duisburg"
+  },
+  15: {
+    name: "1. FC Köln"
+  },
+  16: {
+    name: "Werder Bremen"
+  },
+  17: {
+    name: "Hamburger SV"
   }
+
+
+
+
+  
 }
 const anzahlMannschaften = Object.keys(mannschaften).length
 const anzahlSpieleProSpieltag = anzahlMannschaften / 2
 const anzahlSpieltage = (anzahlMannschaften - 1) * 2
+let aktuelleSaison = 2022
+let aktuellerSpieltag = -1
+
+const spielplan = {
+
+}
 
 function createTestspiele() {
   const saisons = {
@@ -171,7 +218,9 @@ function mannschaftComparator(mannschaft0, mannschaft1) {
   }
 }
 
-function fillTabelle(spieltage, spieltagnummer) {
+function fillTabelle() {
+  const spieltage = saisons[aktuelleSaison].spieltage
+
   const tabelle = {
     spieltag: 0,
     mannschaften: []
@@ -185,60 +234,193 @@ function fillTabelle(spieltage, spieltagnummer) {
       punkte: 0
     })
   }
-  for (let i = 0; i <= spieltagnummer; i++) {
-    addSpieltagToTabelle(tabelle, spieltage[i])
+
+  if (aktuellerSpieltag === -1) {
+    const nameElementCells = document.querySelectorAll('.tabelle [data-index="1"] cell')
+    for (let i = 0; i < tabelle.mannschaften.length; i++) {
+      nameElementCells[i + 1].textContent = mannschaften[tabelle.mannschaften[i].id].name
+    }
+
+    const spieleElementCells = document.querySelectorAll('.tabelle [data-index="2"] cell')
+    for (let i = 0; i < tabelle.mannschaften.length; i++) {
+      spieleElementCells[i + 1].textContent = "0"
+    }
+
+    const toreElementCells = document.querySelectorAll('.tabelle [data-index="3"] cell')
+    for (let i = 0; i < tabelle.mannschaften.length; i++) {
+      toreElementCells[i + 1].textContent = "0:0"
+    }
+
+    const punkteElementCells = document.querySelectorAll('.tabelle [data-index="4"] cell')
+    for (let i = 0; i < tabelle.mannschaften.length; i++) {
+      punkteElementCells[i + 1].textContent = "0"
+    }
+  } else {
+    for (let i = 0; i <= aktuellerSpieltag; i++) {
+      addSpieltagToTabelle(tabelle, spieltage[i])
+    }
+
+    tabelle.mannschaften.sort(mannschaftComparator)
+
+    const nameElementCells = document.querySelectorAll('.tabelle [data-index="1"] cell')
+    for (let i = 0; i < tabelle.mannschaften.length; i++) {
+      nameElementCells[i + 1].textContent = mannschaften[tabelle.mannschaften[i].id].name
+    }
+
+    const spieleElementCells = document.querySelectorAll('.tabelle [data-index="2"] cell')
+    for (let i = 0; i < tabelle.mannschaften.length; i++) {
+      spieleElementCells[i + 1].textContent = tabelle.mannschaften[i].spiele
+    }
+
+    const toreElementCells = document.querySelectorAll('.tabelle [data-index="3"] cell')
+    for (let i = 0; i < tabelle.mannschaften.length; i++) {
+      toreElementCells[i + 1].textContent = tabelle.mannschaften[i].tore + ":" + tabelle.mannschaften[i].gegentore
+    }
+
+    const punkteElementCells = document.querySelectorAll('.tabelle [data-index="4"] cell')
+    for (let i = 0; i < tabelle.mannschaften.length; i++) {
+      punkteElementCells[i + 1].textContent = tabelle.mannschaften[i].punkte
+    }
   }
+}
 
-  tabelle.mannschaften.sort(mannschaftComparator)
+function fillSpieltag() {
+  const spieltage = saisons[aktuelleSaison].spieltage
 
-  const nameElementCells = document.querySelectorAll('.tabelle [data-index="1"] cell')
-  for (let i = 0; i < tabelle.mannschaften.length; i++) {
-    nameElementCells[i + 1].textContent = mannschaften[tabelle.mannschaften[i].id].name
-  }
+  document.querySelector('.spieltag p2 span').textContent = aktuellerSpieltag + 1 // in code we start with 0, but on the display the first day is "1"
 
-  const spieleElementCells = document.querySelectorAll('.tabelle [data-index="2"] cell')
-  for (let i = 0; i < tabelle.mannschaften.length; i++) {
-    spieleElementCells[i + 1].textContent = tabelle.mannschaften[i].spiele
-  }
+  if (aktuellerSpieltag === -1) {
+    let cellElements = document.querySelectorAll('.spieltag [data-index="0"] cell')
+    for (let i = 0; i < Object.keys(spieltage[aktuellerSpieltag + 1].spiele).length; i++) {
+      cellElements[i + 1].textContent = spieltage[aktuellerSpieltag + 1].spiele[i].datum.toLocaleDateString('DE-de', { day: '2-digit', month: '2-digit', year: 'numeric'})
+    }
 
-  const toreElementCells = document.querySelectorAll('.tabelle [data-index="3"] cell')
-  for (let i = 0; i < tabelle.mannschaften.length; i++) {
-    toreElementCells[i + 1].textContent = tabelle.mannschaften[i].tore + ":" + tabelle.mannschaften[i].gegentore
-  }
+    cellElements = document.querySelectorAll('.spieltag [data-index="1"] cell')
+    for (let i = 0; i < Object.keys(spieltage[aktuellerSpieltag + 1].spiele).length; i++) {
+      cellElements[i + 1].textContent = mannschaften[spieltage[aktuellerSpieltag + 1].spiele[i].heim].name
+    }
 
-  const punkteElementCells = document.querySelectorAll('.tabelle [data-index="4"] cell')
-  for (let i = 0; i < tabelle.mannschaften.length; i++) {
-    punkteElementCells[i + 1].textContent = tabelle.mannschaften[i].punkte
+    cellElements = document.querySelectorAll('.spieltag [data-index="2"] cell')
+    for (let i = 0; i < Object.keys(spieltage[aktuellerSpieltag + 1].spiele).length; i++) {
+      cellElements[i + 1].textContent = "tbd"
+    }
+
+    cellElements = document.querySelectorAll('.spieltag [data-index="3"] cell')
+    for (let i = 0; i < Object.keys(spieltage[aktuellerSpieltag + 1].spiele).length; i++) {
+      cellElements[i + 1].textContent = mannschaften[spieltage[aktuellerSpieltag + 1].spiele[i].gast].name
+    }
+  } else {
+    let cellElements = document.querySelectorAll('.spieltag [data-index="0"] cell')
+    for (let i = 0; i < Object.keys(spieltage[aktuellerSpieltag].spiele).length; i++) {
+      cellElements[i + 1].textContent = spieltage[aktuellerSpieltag].spiele[i].datum.toLocaleDateString('DE-de', { day: '2-digit', month: '2-digit', year: 'numeric'})
+    }
+
+    cellElements = document.querySelectorAll('.spieltag [data-index="1"] cell')
+    for (let i = 0; i < Object.keys(spieltage[aktuellerSpieltag].spiele).length; i++) {
+      cellElements[i + 1].textContent = mannschaften[spieltage[aktuellerSpieltag].spiele[i].heim].name
+    }
+
+    cellElements = document.querySelectorAll('.spieltag [data-index="2"] cell')
+    for (let i = 0; i < Object.keys(spieltage[aktuellerSpieltag].spiele).length; i++) {
+      cellElements[i + 1].textContent = spieltage[aktuellerSpieltag].spiele[i].toreHeim + ":" + spieltage[aktuellerSpieltag].spiele[i].toreGast
+    }
+
+    cellElements = document.querySelectorAll('.spieltag [data-index="3"] cell')
+    for (let i = 0; i < Object.keys(spieltage[aktuellerSpieltag].spiele).length; i++) {
+      cellElements[i + 1].textContent = mannschaften[spieltage[aktuellerSpieltag].spiele[i].gast].name
+    }
   }
 }
 
-function fillSpieltag(spieltage, spieltagnummer) {
-  document.querySelector('.spieltag p2 span').textContent = spieltagnummer + 1 // in code we start with 0, but on the display the first day is "1"
-
-  let cellElements = document.querySelectorAll('.spieltag [data-index="0"] cell')
-  for (let i = 0; i < Object.keys(spieltage[spieltagnummer].spiele).length; i++) {
-    cellElements[i + 1].textContent = spieltage[spieltagnummer].spiele[i].datum.toLocaleDateString('DE-de', { day: '2-digit', month: '2-digit', year: 'numeric'})
-  }
-
-  cellElements = document.querySelectorAll('.spieltag [data-index="1"] cell')
-  for (let i = 0; i < Object.keys(spieltage[spieltagnummer].spiele).length; i++) {
-    cellElements[i + 1].textContent = mannschaften[spieltage[spieltagnummer].spiele[i].heim].name
-  }
-
-  // Ergebnis
-  cellElements = document.querySelectorAll('.spieltag [data-index="2"] cell')
-  for (let i = 0; i < Object.keys(spieltage[spieltagnummer].spiele).length; i++) {
-    cellElements[i + 1].textContent = spieltage[spieltagnummer].spiele[i].toreHeim + ":" + spieltage[spieltagnummer].spiele[i].toreGast
-  }
-
-  cellElements = document.querySelectorAll('.spieltag [data-index="3"] cell')
-  for (let i = 0; i < Object.keys(spieltage[spieltagnummer].spiele).length; i++) {
-    cellElements[i + 1].textContent = mannschaften[spieltage[spieltagnummer].spiele[i].gast].name
+// -------------------------
+function vorigerSpieltag() {
+  if (aktuellerSpieltag > -1) {
+    aktuellerSpieltag -= 1
+    fillTabelle()
+    fillSpieltag()
   }
 }
+
+function naechsterSpieltag() {
+  if (aktuellerSpieltag < anzahlSpieltage - 1) {
+    aktuellerSpieltag += 1
+    fillTabelle()
+    fillSpieltag()
+  }
+}
+
+function addEventHandler() {
+  document.getElementById('voriger-spieltag').addEventListener('click', vorigerSpieltag)
+  document.getElementById('naechster-spieltag').addEventListener('click', naechsterSpieltag)
+}
+
+
+
+
+
+
+
+/*
+console.log('Anzahl Spiele: %s', anzahlSpieltage)
+
+addEventHandler()
 
 const saisons = createTestspiele()
-//console.log(saisons)
+fillTabelle()
+fillSpieltag()
+*/
 
-fillTabelle(saisons[2022].spieltage, 2)
-fillSpieltag(saisons[2022].spieltage, 2)
+
+
+console.log("Test")
+
+// siehe https://de.wikipedia.org/wiki/Spielplan_(Sport)
+
+// sei die Anzahl der Mannschaften z = 18
+// sei A die zufällige Liste der 18 Mannschaften
+// sei INDEX der Index jeder Mannschaft in der Liste
+// sei JOKER die Mannschaft mit INDEX == 18
+
+// für Spieltag n (1 <= n <= 17) gilt:
+//     Verein k spielt gegen Verein l, wobei gilt:
+//         (k + l) % 17 == 0
+// Dies wird an jedem Spieltag genau eine Mannschaft übrig lassen.
+// Diese spielt gegen den JOKER.
+
+// Ist (k + l) % 2 == 0, dann hat die Mannschaft mit dem höheren Index Heimrecht.
+// Ist (k + l) % 2 == 1, dann hat die Mannschaft mit dem niedrigeren Index Heimrecht.
+// Der Joker hat Heimrecht gegen die Mannschaften 8 - 16.
+// In der Rückrunde wird einfach getauscht.
+
+
+function erzeugeSpieltagspaarungen(spieltag) {
+  const alleMannschaften = [...Array(18).keys()]
+  alleMannschaften.shift()
+  let mannschaft1
+  let mannschaft2
+  const grenze = Math.ceil(spieltag / 2)
+  const spiele = []
+
+  while (alleMannschaften.length > 1) {
+    mannschaft1 = alleMannschaften.shift()
+    mannschaft2 = spieltag - mannschaft1
+    if (mannschaft1 === mannschaft2) {
+      alleMannschaften.push(mannschaft1)
+      continue
+    }
+    if (mannschaft1 >= grenze) {
+      mannschaft2 += 17
+    }
+    alleMannschaften.splice(alleMannschaften.indexOf(mannschaft2), 1)
+    spiele.push({
+      heim: ((mannschaft1 + mannschaft2) % 2 === 0) ? Math.max(mannschaft1, mannschaft2) : Math.min(mannschaft1, mannschaft2),
+      gast: ((mannschaft1 + mannschaft2) % 2 === 0) ? Math.min(mannschaft1, mannschaft2) : Math.max(mannschaft1, mannschaft2)
+    })
+  }
+  spiele.push({
+    heim: (alleMannschaften[0] >= 8 && alleMannschaften[0] <= 16) ? 17 : alleMannschaften[0],
+    gast: (alleMannschaften[0] >= 8 && alleMannschaften[0] <= 16) ? alleMannschaften[0] : 17
+  })
+}
+
+erzeugeSpieltagspaarungen(10)
