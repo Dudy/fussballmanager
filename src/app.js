@@ -122,6 +122,43 @@ function createTestspiele() {
   return saisonList
 }
 
+function erzeugeSaisons() {
+  const saisonList = {
+    2022: {
+      saison: "2022/2023",
+      startdatum: new Date("2022-08-06T13:30:00Z"),
+      spieltage: {}
+    }
+  }
+
+  const saisonIndex = 2022
+  const saison = saisonList[saisonIndex]
+
+  let datum = saison.startdatum
+
+  for (let spieltagIndex = 0; spieltagIndex < anzahlSpieltage; spieltagIndex++) {
+    const spieltag = {
+      spiele: {}
+    }
+    saison.spieltage[spieltagIndex] = spieltag
+
+    const spieltagspaarungen = erzeugeSpieltagspaarungen(spieltagIndex)
+    for (let spielIndex = 0; spielIndex < anzahlSpieleProSpieltag; spielIndex++) {
+      spieltag.spiele[spielIndex] = {
+        datum: datum.toISOString(),
+        heim: spieltagspaarungen[spielIndex].heim,
+        gast: spieltagspaarungen[spielIndex].gast,
+        toreHeim: Math.floor(Math.random() * 4),
+        toreGast: Math.floor(Math.random() * 4)
+      }
+    }
+
+    datum.setDate(datum.getDate() + 7)
+  }
+
+  return saisonList
+}
+
 function addSpieltagToTabelle(tabelle, spieltag) {  
   for (const id of Object.keys(spieltag.spiele)) {
     const spiel = spieltag.spiele[id]
@@ -331,7 +368,7 @@ function addEventHandler() {
     .addEventListener("click", naechsterSpieltag)
 }
 
-function erzeugeSpieltagspaarungen(spieltag) {
+function erzeugeSpieltagspaarungen(spieltagNullBasiert) {
   // siehe https://de.wikipedia.org/wiki/Spielplan_(Sport)
 
   // sei die Anzahl der Mannschaften z = 18
@@ -350,12 +387,18 @@ function erzeugeSpieltagspaarungen(spieltag) {
   // Der Joker hat Heimrecht gegen die Mannschaften 8 - 16.
   // In der Rückrunde wird einfach getauscht.
 
-  const alleMannschaften = [...Array(18).keys()]
+  // Der Algorithmus braucht die Nummer des Spieltags Eins-Basiert, das heißt
+  // der erste Spieltag ist "Spieltag 1". Überall sonst im Code ist der Spieltag 0-basiert.
+  const spieltag = spieltagNullBasiert + 1
+
+  const alleMannschaften = [...Array(anzahlMannschaften).keys()]
   alleMannschaften.shift()
   let mannschaft1
   let mannschaft2
   const grenze = Math.ceil(spieltag / 2)
   const spiele = []
+  const offset = anzahlMannschaften - 1
+  const jokerHeimgrenze = (anzahlMannschaften - 2) / 2
 
   while (alleMannschaften.length > 1) {
     mannschaft1 = alleMannschaften.shift()
@@ -365,34 +408,37 @@ function erzeugeSpieltagspaarungen(spieltag) {
       continue
     }
     if (mannschaft1 >= grenze) {
-      mannschaft2 += 17
+      mannschaft2 += offset
     }
     alleMannschaften.splice(alleMannschaften.indexOf(mannschaft2), 1)
     spiele.push({
       heim:
-        (mannschaft1 + mannschaft2) % 2 === 0
+        ((mannschaft1 + mannschaft2) % 2 === 0
           ? Math.max(mannschaft1, mannschaft2)
-          : Math.min(mannschaft1, mannschaft2),
+          : Math.min(mannschaft1, mannschaft2)) - 1,
       gast:
-        (mannschaft1 + mannschaft2) % 2 === 0
+        ((mannschaft1 + mannschaft2) % 2 === 0
           ? Math.min(mannschaft1, mannschaft2)
-          : Math.max(mannschaft1, mannschaft2)
+          : Math.max(mannschaft1, mannschaft2)) - 1
     })
   }
+
   spiele.push({
     heim:
-      alleMannschaften[0] >= 8 && alleMannschaften[0] <= 16
-        ? 17
-        : alleMannschaften[0],
+      alleMannschaften[0] >= jokerHeimgrenze && alleMannschaften[0] <= 2 * jokerHeimgrenze
+        ? offset
+        : alleMannschaften[0] - 1,
     gast:
-      alleMannschaften[0] >= 8 && alleMannschaften[0] <= 16
-        ? alleMannschaften[0]
-        : 17
+      alleMannschaften[0] >= jokerHeimgrenze && alleMannschaften[0] <= 2 * jokerHeimgrenze
+        ? alleMannschaften[0] - 1
+        : offset
   })
+
+  return spiele
 }
 
 addEventHandler()
 
-const saisons = createTestspiele()
+const saisons = erzeugeSaisons()
 fillTabelle()
 fillSpieltag()

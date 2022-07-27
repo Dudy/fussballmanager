@@ -2,4 +2,6 @@
 [ ] füge Spieler zu Mannschaften hinzu
 [ ] mach das Ergebnis eines Spiels nicht mehr zufällig, sondern abhängig von den Eigenschaften der Spieler
 [ ] mache die Spalten immer gleich groß (Tabelle und Spieltag)
-[ ] benutze den Spielplan, um die Spieltage zu erstellen, nicht den Zufall
+[x] benutze den Spielplan, um die Spieltage zu erstellen, nicht den Zufall
+[ ] überlege, ob die Spieltage, Spiele etc. Maps oder Arrays sein sollten
+[ ] überlege, ob der Spieltag überall Eins-basiert sein sollte oder weiterhin Null-basiert
