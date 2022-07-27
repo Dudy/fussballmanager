@@ -1,0 +1,5 @@
+[ ] lagere Daten (Mannschaftsnamen) in eine Datei aus und lese sie separat ein
+[ ] füge Spieler zu Mannschaften hinzu
+[ ] mach das Ergebnis eines Spiels nicht mehr zufällig, sondern abhängig von den Eigenschaften der Spieler
+[ ] mache die Spalten immer gleich groß (Tabelle und Spieltag)
+[ ] benutze den Spielplan, um die Spieltage zu erstellen, nicht den Zufall
