@@ -1,4 +1,5 @@
-[ ] lagere Daten (Mannschaftsnamen) in eine Datei aus und lese sie separat ein
+[x] lagere Daten (Mannschaftsnamen) in eine Datei aus und lese sie separat ein
+[x] organisieren den Code besser
 [ ] füge Spieler zu Mannschaften hinzu
 [ ] mach das Ergebnis eines Spiels nicht mehr zufällig, sondern abhängig von den Eigenschaften der Spieler
 [ ] mache die Spalten immer gleich groß (Tabelle und Spieltag)
