@@ -1,3 +1,5 @@
+const sleep = ms => new Promise(r => setTimeout(r, ms))
+
 const mannschaften = {
   0: {
     name: "Arminia Bielefeld"
@@ -218,7 +220,15 @@ function mannschaftComparator(mannschaft0, mannschaft1) {
   }
 }
 
-function fillTabelle() {
+function createCell(text) {
+  const cellNode = document.createElement("cell")
+  //cellNode.id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
+  const textNode = document.createTextNode(text)
+  cellNode.appendChild(textNode)
+  return cellNode
+}
+
+function fillTabelle2() {
   const spieltage = saisons[aktuelleSaison].spieltage
 
   const tabelle = {
@@ -235,26 +245,26 @@ function fillTabelle() {
     })
   }
 
+/*
+  const nameDaten2 = Array()
+  for (const mannschaft of tabelle.mannschaften) {
+    nameDaten2.push(mannschaften[mannschaft.id].name)
+  }
+  */
+
+
+
+  let platzDaten = [...Array(18).keys()].map(i => createCell((i + 1) + '.'))
+  let nameDaten
+  let spieleDaten
+  let toreDaten
+  let punkteDaten
+
   if (aktuellerSpieltag === -1) {
-    const nameElementCells = document.querySelectorAll('.tabelle [data-index="1"] cell')
-    for (let i = 0; i < tabelle.mannschaften.length; i++) {
-      nameElementCells[i + 1].textContent = mannschaften[tabelle.mannschaften[i].id].name
-    }
-
-    const spieleElementCells = document.querySelectorAll('.tabelle [data-index="2"] cell')
-    for (let i = 0; i < tabelle.mannschaften.length; i++) {
-      spieleElementCells[i + 1].textContent = "0"
-    }
-
-    const toreElementCells = document.querySelectorAll('.tabelle [data-index="3"] cell')
-    for (let i = 0; i < tabelle.mannschaften.length; i++) {
-      toreElementCells[i + 1].textContent = "0:0"
-    }
-
-    const punkteElementCells = document.querySelectorAll('.tabelle [data-index="4"] cell')
-    for (let i = 0; i < tabelle.mannschaften.length; i++) {
-      punkteElementCells[i + 1].textContent = "0"
-    }
+    nameDaten = Array.from(tabelle.mannschaften, mannschaft => createCell(mannschaften[mannschaft.id].name))
+    spieleDaten = Array(tabelle.mannschaften.length).fill(createCell("0"))
+    toreDaten = Array(tabelle.mannschaften.length).fill(createCell("0:0"))
+    punkteDaten = Array(tabelle.mannschaften.length).fill(createCell("0"))
   } else {
     for (let i = 0; i <= aktuellerSpieltag; i++) {
       addSpieltagToTabelle(tabelle, spieltage[i])
@@ -262,26 +272,117 @@ function fillTabelle() {
 
     tabelle.mannschaften.sort(mannschaftComparator)
 
-    const nameElementCells = document.querySelectorAll('.tabelle [data-index="1"] cell')
-    for (let i = 0; i < tabelle.mannschaften.length; i++) {
-      nameElementCells[i + 1].textContent = mannschaften[tabelle.mannschaften[i].id].name
-    }
-
-    const spieleElementCells = document.querySelectorAll('.tabelle [data-index="2"] cell')
-    for (let i = 0; i < tabelle.mannschaften.length; i++) {
-      spieleElementCells[i + 1].textContent = tabelle.mannschaften[i].spiele
-    }
-
-    const toreElementCells = document.querySelectorAll('.tabelle [data-index="3"] cell')
-    for (let i = 0; i < tabelle.mannschaften.length; i++) {
-      toreElementCells[i + 1].textContent = tabelle.mannschaften[i].tore + ":" + tabelle.mannschaften[i].gegentore
-    }
-
-    const punkteElementCells = document.querySelectorAll('.tabelle [data-index="4"] cell')
-    for (let i = 0; i < tabelle.mannschaften.length; i++) {
-      punkteElementCells[i + 1].textContent = tabelle.mannschaften[i].punkte
-    }
+    nameDaten = Array.from(tabelle.mannschaften, mannschaft => createCell(mannschaften[mannschaft.id].name))
+    spieleDaten = Array.from(tabelle.mannschaften, mannschaft => createCell(mannschaft.spiele))
+    toreDaten = Array.from(tabelle.mannschaften, mannschaft => createCell(mannschaft.tore + ":" + mannschaft.gegentore))
+    punkteDaten = Array.from(tabelle.mannschaften, mannschaft => createCell(mannschaft.punkte))
   }
+
+
+
+
+
+  platzDaten.unshift(createCell("Platz"))
+  nameDaten.unshift(createCell("Name"))
+  spieleDaten.unshift(createCell("Spiele"))
+  toreDaten.unshift(createCell("Tore"))
+  punkteDaten.unshift(createCell("Punkte"))
+
+  const platzColumnElement = document.querySelector('.tabelle [data-type="platz"]')
+  platzColumnElement.replaceChildren(...platzDaten)
+  
+  const nameColumnElement = document.querySelector('.tabelle [data-type="name"]')
+  nameColumnElement.replaceChildren(...nameDaten)
+
+  const spieleColumnElement = document.querySelector('.tabelle [data-type="spiele"]')
+  console.log(spieleColumnElement)
+  console.log(spieleDaten)
+  console.log(...spieleDaten)
+
+  
+  spieleColumnElement.replaceChildren(...spieleDaten)
+  console.log(spieleColumnElement)
+
+  const toreColumnElement = document.querySelector('.tabelle [data-type="tore"]')
+  toreColumnElement.replaceChildren(...toreDaten)
+
+  const punkteColumnElement = document.querySelector('.tabelle [data-type="punkte"]')
+  punkteColumnElement.replaceChildren(...punkteDaten)
+
+
+
+  
+}
+
+async function fillTabelle() {
+  const spieltage = saisons[aktuelleSaison].spieltage
+
+  const tabelle = {
+    spieltag: 0,
+    mannschaften: []
+  }
+  for (const id of Object.keys(mannschaften)) {
+    tabelle.mannschaften.push({
+      id: id,
+      spiele: 0,
+      tore: 0,
+      gegentore: 0,
+      punkte: 0
+    })
+  }
+
+
+
+
+
+
+
+  let platzDaten = [...Array(18).keys()].map(i => createCell((i + 1) + '.'))
+  let nameDaten
+  let spieleDaten
+  let toreDaten
+  let punkteDaten
+
+  
+
+  if (aktuellerSpieltag === -1) {
+    nameDaten = Array.from(tabelle.mannschaften, mannschaft => createCell(mannschaften[mannschaft.id].name))
+    spieleDaten = Array.from({length: tabelle.mannschaften.length}, () => createCell('0'))
+    toreDaten = Array.from({length: tabelle.mannschaften.length}, () => createCell('0:0'))
+    punkteDaten = Array.from({length: tabelle.mannschaften.length}, () => createCell('0'))
+  } else {
+    for (let i = 0; i <= aktuellerSpieltag; i++) {
+      addSpieltagToTabelle(tabelle, spieltage[i])
+    }
+
+    tabelle.mannschaften.sort(mannschaftComparator)
+
+    nameDaten = Array.from(tabelle.mannschaften, mannschaft => createCell(mannschaften[mannschaft.id].name))
+    spieleDaten = Array.from(tabelle.mannschaften, mannschaft => createCell(mannschaft.spiele))
+    toreDaten = Array.from(tabelle.mannschaften, mannschaft => createCell(mannschaft.tore + ":" + mannschaft.gegentore))
+    punkteDaten = Array.from(tabelle.mannschaften, mannschaft => createCell(mannschaft.punkte))
+  }
+
+  platzDaten.unshift(createCell("Platz"))
+  nameDaten.unshift(createCell("Name"))
+  spieleDaten.unshift(createCell("Spiele"))
+  toreDaten.unshift(createCell("Tore"))
+  punkteDaten.unshift(createCell("Punkte"))
+
+  const platzColumnElement = document.querySelector('.tabelle [data-type="platz"]')
+  platzColumnElement.replaceChildren(...platzDaten)
+  
+  const nameColumnElement = document.querySelector('.tabelle [data-type="name"]')
+  nameColumnElement.replaceChildren(...nameDaten)
+
+  const spieleColumnElement = document.querySelector('.tabelle [data-type="spiele"]')
+  spieleColumnElement.replaceChildren(...spieleDaten)
+
+  const toreColumnElement = document.querySelector('.tabelle [data-type="tore"]')
+  toreColumnElement.replaceChildren(...toreDaten)
+
+  const punkteColumnElement = document.querySelector('.tabelle [data-type="punkte"]')
+  punkteColumnElement.replaceChildren(...punkteDaten)
 }
 
 function fillSpieltag() {
@@ -337,7 +438,7 @@ function vorigerSpieltag() {
   if (aktuellerSpieltag > -1) {
     aktuellerSpieltag -= 1
     fillTabelle()
-    fillSpieltag()
+    //fillSpieltag()
   }
 }
 
@@ -345,7 +446,7 @@ function naechsterSpieltag() {
   if (aktuellerSpieltag < anzahlSpieltage - 1) {
     aktuellerSpieltag += 1
     fillTabelle()
-    fillSpieltag()
+    //fillSpieltag()
   }
 }
 
@@ -360,15 +461,7 @@ function addEventHandler() {
 
 
 
-/*
-console.log('Anzahl Spiele: %s', anzahlSpieltage)
 
-addEventHandler()
-
-const saisons = createTestspiele()
-fillTabelle()
-fillSpieltag()
-*/
 
 
 
@@ -423,4 +516,17 @@ function erzeugeSpieltagspaarungen(spieltag) {
   })
 }
 
-erzeugeSpieltagspaarungen(10)
+
+
+//erzeugeSpieltagspaarungen(10)
+
+//console.log('Anzahl Spiele: %s', anzahlSpieltage)
+
+addEventHandler()
+
+const saisons = createTestspiele()
+await fillTabelle()
+//fillSpieltag()
+
+
+    

@@ -1,0 +1,79 @@
+<html>
+
+<head>
+    
+    <style>
+        main {
+            display: flex;
+        }
+
+        div {
+            margin-right: 20px;
+        }
+
+        label,
+        button {
+            display: block;
+        }
+
+        .buttons {
+            display: flex;
+            flex-flow: column;
+            justify-content: center;
+        }
+
+        select {
+            width: 200px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h2>Party food option list</h2>
+
+    <main>
+        <div>
+            <label for="no">No thanks!</label>
+
+            <select id="no" multiple size="10">
+                <option>Apples</option>
+                <option>Apples</option>
+                <option>Apples</option>
+            </select>
+        </div>
+
+        <div class="buttons">
+            <button id="to-yes">Transfer to "Yes" --&gt;</button>
+            <button id="to-no">&lt;-- Transfer to "No"</button>
+        </div>
+
+        <div>
+            <label for="yes">Yes please!</label>
+
+            <select id="yes" multiple size="10">
+
+            </select>
+        </div>
+    </main>
+    <script>
+        const noSelect = document.getElementById('no')
+        const yesSelect = document.getElementById('yes')
+        const noBtn = document.getElementById('to-no')
+        const yesBtn = document.getElementById('to-yes')
+
+        yesBtn.addEventListener('click', () => {
+            const selectedTransferOptions = document.querySelectorAll('#no option:checked')
+            const existingYesOptions = document.querySelectorAll('#yes option')
+            yesSelect.replaceChildren(...selectedTransferOptions, ...existingYesOptions)
+        })
+
+        noBtn.addEventListener('click', () => {
+            const selectedTransferOptions = document.querySelectorAll('#yes option:checked')
+            const existingNoOptions = document.querySelectorAll('#no option')
+            noSelect.replaceChildren(...selectedTransferOptions, ...existingNoOptions)
+        });
+    </script>
+</body>
+
+</html>
