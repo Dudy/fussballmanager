@@ -1,5 +1,6 @@
 import { vorigerSpieltag, naechsterSpieltag } from './aktionen.js'
 import { fillTabelle, fillSpieltag } from './uiAktualisierungen.js'
+import { randomBool, randomDate, randomInt } from './utils.js'
 
 export async function init(data) {
     data.mannschaften = await (
@@ -7,6 +8,11 @@ export async function init(data) {
     ).json()
     data.anzahlMannschaften = Object.keys(data.mannschaften).length
     data.anzahlSpieltage = (data.anzahlMannschaften - 1) * 2
+    data.namen = await (
+        await fetch("http://localhost:8080/js/namen.json")
+    ).json()
+
+    fillMannschaftenWithSpieler(data)
 
     erzeugeSaisons(data)
     addEventHandler(data)
@@ -111,8 +117,8 @@ function erzeugeSaisons(data) {
                 datum: datum.toISOString(),
                 heim: spieltagspaarungen[spielIndex].heim,
                 gast: spieltagspaarungen[spielIndex].gast,
-                toreHeim: Math.floor(Math.random() * 4),
-                toreGast: Math.floor(Math.random() * 4)
+                toreHeim: randomInt(0, 4),
+                toreGast: randomInt(0, 4)
             }
         }
 
@@ -127,4 +133,49 @@ function addEventHandler(data) {
     document
         .getElementById("naechster-spieltag")
         .addEventListener("click", () => { naechsterSpieltag(data) })
+}
+
+function fillMannschaftenWithSpieler(data) {
+    const today = new Date()
+    const startDate = new Date(today.getTime() - 1000 * 60 * 60 * 24 * 365 * 40) // max. 40 Jahre alt
+    const endDate = new Date(today.getTime() - 1000 * 60 * 60 * 24 * 365 * 16) // min. 16 Jahre alt
+
+    for (const mannschaft of Object.values(data.mannschaften)) {
+        mannschaft.spieler = []
+
+        // drei Torhüter
+        for (let i = 0; i < 3; i++) {
+            mannschaft.spieler.push({
+                name:
+                    data.namen.vornamen[randomInt(0, data.namen.vornamen.length)] +
+                    " " +
+                    data.namen.nachnamen[randomInt(0, data.namen.nachnamen.length)],
+                spielstaerke: {
+                    tor: randomInt(30, 100),
+                    verteidigung: randomInt(0, 30),
+                    mittelfeld: randomInt(0, 30),
+                    angriff: randomInt(0, 30)
+                },
+                geburtsdatum: randomDate(startDate, endDate)
+            })
+        }
+
+        // 15 Feldspieler
+        for (let i = 0; i < 15; i++) {
+            mannschaft.spieler.push({
+                name:
+                    data.namen.vornamen[randomInt(0, data.namen.vornamen.length)] +
+                    " " +
+                    data.namen.nachnamen[randomInt(0, data.namen.nachnamen.length)],
+                spielstaerke: {
+                    tor: randomInt(0, 30),
+                    verteidigung: randomInt(30, 100),
+                    mittelfeld: randomInt(30, 100),
+                    angriff: randomInt(30, 100)
+                },
+                geburtsdatum: randomDate(startDate, endDate)
+            })
+        }
+        console.log(mannschaft)
+    }
 }
