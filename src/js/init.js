@@ -3,7 +3,7 @@ import { fillTabelle, fillSpieltag } from './uiAktualisierungen.js'
 
 export async function init(data) {
     data.mannschaften = await (
-        await fetch("http://localhost:8080/mannschaften.json")
+        await fetch("http://localhost:8080/js/mannschaften.json")
     ).json()
     data.anzahlMannschaften = Object.keys(data.mannschaften).length
     data.anzahlSpieltage = (data.anzahlMannschaften - 1) * 2
