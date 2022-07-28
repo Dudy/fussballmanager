@@ -1,5 +1,3 @@
-import { fillTabelle, fillSpieltag } from './uiAktualisierungen.js'
-
 function addSpieltagToTabelle(tabelle, spieltag) {  
     for (const id of Object.keys(spieltag.spiele)) {
         const spiel = spieltag.spiele[id]
@@ -149,7 +147,7 @@ export function fillSpieltag(data) {
   
     // im Code ist der erste Spieltag am Index 0, aber wir zeigen auf der UI natürlich "1" an
     document
-        .querySelector(".spieltag p2 span")
+        .querySelector(".spieltag p span")
         .textContent = data.aktuellerSpieltag + 1
   
     let datumDaten

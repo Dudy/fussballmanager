@@ -1,0 +1,40 @@
+.left-aligned-children cell {
+    text-align: left;
+}
+.center-aligned-children cell {
+    text-align: center;
+}
+.right-aligned-children cell {
+    text-align: right;
+}
+
+.flex-tabelle {
+    display: flex;
+    justify-content: space-between;
+}
+column {
+    display: flex;
+    flex-direction: column;
+}
+cell {
+    border: solid 1px black;
+    padding: 0.5rem;
+    text-align: right;
+}
+
+.aktionen {
+    margin: 0 1rem;
+}
+.flex-aktionen {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.aktionen button {
+    margin-bottom: 1rem;
+}
+
+.flex-spieltag {
+    display: flex;
+}

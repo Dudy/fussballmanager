@@ -1,8 +1,7 @@
 import { vorigerSpieltag, naechsterSpieltag } from './aktionen.js'
+import { fillTabelle, fillSpieltag } from './uiAktualisierungen.js'
 
 export async function init(data) {
-    console.log("initialisiere !!")
-
     data.mannschaften = await (
         await fetch("http://localhost:8080/mannschaften.json")
     ).json()

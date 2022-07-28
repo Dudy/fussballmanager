@@ -1,8 +1,37 @@
-[x] lagere Daten (Mannschaftsnamen) in eine Datei aus und lese sie separat ein
-[x] organisieren den Code besser
+----- Gameplay
 [ ] füge Spieler zu Mannschaften hinzu
 [ ] mach das Ergebnis eines Spiels nicht mehr zufällig, sondern abhängig von den Eigenschaften der Spieler
-[ ] mache die Spalten immer gleich groß (Tabelle und Spieltag)
 [x] benutze den Spielplan, um die Spieltage zu erstellen, nicht den Zufall
+[ ] Spieltag
+        [x] aktuelle Tabelle
+        [x] Spiele des Spieltags
+        [ ] Aufstellung meiner Mannschaft
+[ ] Mannschaft
+        [ ] Teamtraining
+        [ ] Individualtraining (Spieler)
+        [ ] Transfermarkt
+        [ ] Mitarbeiter (Coach, Cotrainer, Physio, Arzt, Marketing)
+[ ] Finanzen
+        [ ] Werbung
+        [ ] Merchandising
+        [ ] Verträge
+[ ] Immobilien
+        [ ] Trainingsgelände (Plätze, Hallen, Fitnessstudio)
+        [ ] Stadion (Stehplätze, Sitzplätze, VIP Bereich, Catering, Merchandising)
+        [ ] Internat (Nachwuchsarbeit)
+        [ ] medizinische Abteilung (Erste Hilfe, Physio, Regeneration)
+
+----- interne Logik
+[x] lagere Daten (Mannschaftsnamen) in eine Datei aus und lese sie separat ein
+[x] organisieren den Code besser
 [ ] überlege, ob die Spieltage, Spiele etc. Maps oder Arrays sein sollten
 [ ] überlege, ob der Spieltag überall Eins-basiert sein sollte oder weiterhin Null-basiert
+
+----- UI
+[ ] mache die Spalten immer gleich groß (Tabelle und Spieltag)
+[x] Navigationsleiste
+[x] CSS Organisation
+[x] einfache Buttons
+[x] einfaches Color Scheme
+[ ] Navigation inkl. mehrerer Unterseiten (z.B. Spieltag, Mannschaft, Finanzen, Immobilien)
+[ ] Subnavigation links

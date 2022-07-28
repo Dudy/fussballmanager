@@ -1,64 +1,26 @@
 <html>
     <head>
         <title>Fussball Manager</title>
-        <link rel="icon" type="image/png" href="../images/favicon-96.png">
-        <style>
-            .inhalt {
-                display:flex;
-                justify-content: space-between;
-            }
-
-            .left-aligned-children cell {
-                text-align: left;
-            }
-            .center-aligned-children cell {
-                text-align: center;
-            }
-            .right-aligned-children cell {
-                text-align: right;
-            }
-
-            .flex-tabelle {
-                display: flex;
-                justify-content: space-between;
-            }
-            column {
-                display: flex;
-                flex-direction: column;
-            }
-            cell {
-                border: solid 1px black;
-                padding: 0.5vw;
-                text-align: right;
-            }
-
-            .flex-aktionen {
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-            }
-
-            .aktionen button {
-                margin-bottom: 10px;
-            }
-
-            .flex-spieltag {
-                display: flex;
-            }
-        </style>
+        <link rel="icon" type="image/png" href="images/favicon-96.png">
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
     </head>
     <body>
-        <p1>Hi</p1>
+        <nav class="navbar">
+            <a href="http://www.pomis.de/games/fussballmanager" class="logo">
+                <p>Fussball Manager</p>
+            </a>
+            <ul class="nav-links">
+                <li class="nav-item active"><a href="#">Spieltag</a></li>
+                <li class="nav-item"><a href="#">Menu 2</a></li>
+                <li class="nav-item"><a href="#">Menu 3</a></li>
+                <li class="nav-item"><a href="#">Menu 4</a></li>
+            </ul>
+        </nav>
 
-        <style>
-            
-        </style>
-
-        <div class="inhalt" style="border: solid 1px black">
-            
-            <div class="tabelle" style="border: solid 1px blue">
-                <p2>Tabelle</p2>
-                <div class="flex-tabelle" style="border: solid 1px red">
+        <div class="inhalt">
+            <div class="tabelle">
+                <p>Tabelle</p>
+                <div class="flex-tabelle">
                     <column data-type="platz">
                         <cell>Platz</cell>
                     </column>
@@ -77,9 +39,9 @@
                 </div>
             </div>
 
-            <div class="aktionen" style="border: solid 1px blue">
-                <p2>Aktionen</p2>
-                <div class="flex-aktionen" style="border: solid 1px red">
+            <div class="aktionen">
+                <p>Aktionen</p>
+                <div class="flex-aktionen">
                     <button id="voriger-spieltag">voriger Spieltag</button>
                     <button id="naechster-spieltag">nächster Spieltag</button>
                     <button>drei</button>
@@ -87,9 +49,9 @@
             </div>
 
             
-            <div class="spieltag" style="border: solid 1px blue">
-                <p2>Spieltag <span>0</span></p2>
-                <div class="flex-spieltag" style="border: solid 1px red">
+            <div class="spieltag">
+                <p>Spieltag <span>0</span></p>
+                <div class="flex-spieltag">
                     <column data-type="datum">
                         <cell>Datum</cell>
                     </column>
