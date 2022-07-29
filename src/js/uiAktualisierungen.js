@@ -1,4 +1,4 @@
-function addSpieltagToTabelle(tabelle, spieltag) {  
+function addSpieltagToTabelle(tabelle, spieltag) {
     for (const id of Object.keys(spieltag.spiele)) {
         const spiel = spieltag.spiele[id]
 
@@ -68,7 +68,7 @@ function createCell(text) {
     return cellNode
 }
 
-export function fillTabelle(data) {
+export function fillTabelle(data, node = document.querySelector('#inhalt')) {
     const spieltage = data.saisons[data.aktuelleSaison].spieltage
   
     const tabelle = {
@@ -123,30 +123,30 @@ export function fillTabelle(data) {
     spieleDaten.unshift(createCell("Spiele"))
     toreDaten.unshift(createCell("Tore"))
     punkteDaten.unshift(createCell("Punkte"))
-  
+
     // Tabellenspalten aktualisieren
-    document
+    node
         .querySelector('.tabelle [data-type="platz"]')
         .replaceChildren(...platzDaten)
-    document
+    node
         .querySelector('.tabelle [data-type="name"]')
         .replaceChildren(...nameDaten)
-    document
+    node
         .querySelector('.tabelle [data-type="spiele"]')
         .replaceChildren(...spieleDaten)
-    document
+    node
         .querySelector('.tabelle [data-type="tore"]')
         .replaceChildren(...toreDaten)
-    document
+    node
         .querySelector('.tabelle [data-type="punkte"]')
         .replaceChildren(...punkteDaten)
   }
   
-export function fillSpieltag(data) {
+export function fillSpieltag(data, node = document.querySelector('#inhalt')) {
     const spieltage = data.saisons[data.aktuelleSaison].spieltage
   
     // im Code ist der erste Spieltag am Index 0, aber wir zeigen auf der UI natürlich "1" an
-    document
+    node
         .querySelector(".spieltag p span")
         .textContent = data.aktuellerSpieltag + 1
   
@@ -180,16 +180,16 @@ export function fillSpieltag(data) {
     gastDaten.unshift(createCell('Gastmannschaft'))
   
     // Tabellenspalten aktualisieren
-    document
+    node
         .querySelector('.spieltag [data-type="datum"]')
         .replaceChildren(...datumDaten)
-    document
+    node
         .querySelector('.spieltag [data-type="heim"]')
         .replaceChildren(...heimDaten)
-    document
+    node
         .querySelector('.spieltag [data-type="ergebnis"]')
         .replaceChildren(...ergebnisDaten)
-    document
+    node
         .querySelector('.spieltag [data-type="gast"]')
         .replaceChildren(...gastDaten)
 }

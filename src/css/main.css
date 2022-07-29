@@ -3,10 +3,10 @@
 
 :root {
     --very-dark: #03045e;
-    --dark: 0077b6;
-    --normal: 00b4d8;
-    --light: 90e0ef;
-    --very-light: caf0f8;
+    --dark: #0077b6;
+    --normal: #00b4d8;
+    --light: #90e0ef;
+    --very-light: #caf0f8;
 }
 
 html {
@@ -21,14 +21,25 @@ body {
     margin: 0;
 }
 
-.inhalt {
+main {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+}
+
+#subnavigation {
+    width: 8rem;
+    margin-right: 1.5rem;
+}
+
+#inhalt {
     display: flex;
     justify-content: space-between;
     border: solid 1px black;
     padding: 1rem;
 }
 
-.inhalt p {
+#inhalt p {
     margin: 0 0 1rem 0;
 }
 
@@ -37,4 +48,24 @@ button {
     color: var(--very-light);
     padding: 1rem 0.5rem;
     border: none;
+}
+
+/* ----- loader ----- */
+.loader {
+    text-align: center;
+}
+
+.spinner {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    margin-bottom: 20px;
+}
+  
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }

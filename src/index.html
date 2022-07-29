@@ -1,11 +1,11 @@
-<html>
+<!DOCTYPE html>
     <head>
         <title>Fussball Manager</title>
         <link rel="icon" type="image/png" href="images/favicon-96.png">
         <link rel="stylesheet" type="text/css" href="css/main.css" />
     </head>
     <body>
-        <nav class="navbar">
+        <nav class="navbar-top" aria-label="main navigation">
             <a href="http://www.pomis.de/games/fussballmanager" class="logo">
                 <p>Fussball Manager</p>
             </a>
@@ -17,7 +17,29 @@
             </ul>
         </nav>
 
-        <div class="inhalt">
+        <main>
+            <section id="subnavigation"></section>
+
+            <section id="inhalt">
+                <div class="loader">
+                    <div class="spinner"></div>
+                    <p>lade Daten ...</p>
+                </div>
+            </secti>
+        </main>
+        
+        <template id="subnavigationTemplate">
+            <nav class="navbar-left" aria-label="subnavigation">
+                <ul class="nav-links">
+                    <li class="nav-item active"><a href="#" data-id="uebersicht">Übersicht</a></li>
+                    <li class="nav-item"><a href="#" data-id="aufstellung">Aufstellung</a></li>
+                    <li class="nav-item"><a href="#" data-id="menu3">Menu 3</a></li>
+                    <li class="nav-item"><a href="#" data-id="menu4">Menu 4</a></li>
+                </ul>
+            </nav>
+        </template>
+
+        <template id="spieltagUebersichtTemplate">
             <div class="tabelle">
                 <p>Tabelle</p>
                 <div class="flex-tabelle">
@@ -48,7 +70,6 @@
                 </div>
             </div>
 
-            
             <div class="spieltag">
                 <p>Spieltag <span>0</span></p>
                 <div class="flex-spieltag">
@@ -67,7 +88,11 @@
                     </column>
                 </div>
             </div>
-        </div>
+        </template>
+
+        <template id="spieltagAufstellung">
+
+        </template>
 
         <script type="module" src="js/app.js"></script>
     </body>

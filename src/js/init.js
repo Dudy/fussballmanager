@@ -1,24 +1,73 @@
 import { vorigerSpieltag, naechsterSpieltag } from './aktionen.js'
 import { fillTabelle, fillSpieltag } from './uiAktualisierungen.js'
-import { randomBool, randomDate, randomInt } from './utils.js'
+import { randomDate, randomInt } from './utils.js'
 
 export async function init(data) {
+    await initData(data)
+    erzeugeSaisons(data)
+    
+    const spieltagElement = document.querySelector('#spieltagUebersichtTemplate').content.cloneNode(true)
+    fillTabelle(data, spieltagElement)
+    fillSpieltag(data, spieltagElement)
+    addEventHandler(data, spieltagElement)
+    document.querySelector('#inhalt').replaceChildren(spieltagElement)
+    
+    const subnavigationElement = document.querySelector('#subnavigationTemplate').content.cloneNode(true)
+    document.querySelector('#subnavigation').replaceChildren(subnavigationElement)
+}
+
+async function initData(data) {
     data.mannschaften = await (
         await fetch("http://localhost:8080/js/mannschaften.json")
     ).json()
     data.anzahlMannschaften = Object.keys(data.mannschaften).length
     data.anzahlSpieltage = (data.anzahlMannschaften - 1) * 2
+    data.aktuelleSaison = 2022
+    data.aktuellerSpieltag = -1
     data.namen = await (
         await fetch("http://localhost:8080/js/namen.json")
     ).json()
+    data.saisons = []
 
     fillMannschaftenWithSpieler(data)
+}
 
-    erzeugeSaisons(data)
-    addEventHandler(data)
+function erzeugeSpieler(data, startDate, endDate, istTorwart) {
+    return {
+        name:
+            data.namen.vornamen[randomInt(0, data.namen.vornamen.length)] +
+            " " +
+            data.namen.nachnamen[randomInt(0, data.namen.nachnamen.length)],
+        spielstaerke: {
+            tor: istTorwart ? randomInt(30, 100) : randomInt(0, 30),
+            verteidigung: istTorwart ? randomInt(0, 30) : randomInt(30, 100),
+            mittelfeld: istTorwart ? randomInt(0, 30) : randomInt(30, 100),
+            angriff: istTorwart ? randomInt(0, 30) : randomInt(30, 100),
+        },
+        geburtsdatum: randomDate(startDate, endDate)
+    }
+}
 
-    fillTabelle(data)
-    fillSpieltag(data)
+function fillMannschaftenWithSpieler(data) {
+    const today = new Date()
+    const startDate = new Date(today.getTime() - 1000 * 60 * 60 * 24 * 365 * 40) // max. 40 Jahre alt
+    const endDate = new Date(today.getTime() - 1000 * 60 * 60 * 24 * 365 * 16) // min. 16 Jahre alt
+    const TORWART = true
+    const FELDSPIELER = false
+
+    for (const mannschaft of Object.values(data.mannschaften)) {
+        mannschaft.spieler = []
+
+        // drei Torhüter
+        for (let i = 0; i < 3; i++) {
+            mannschaft.spieler.push(erzeugeSpieler(data, startDate, endDate, TORWART))
+        }
+
+        // 15 Feldspieler
+        for (let i = 0; i < 15; i++) {
+            mannschaft.spieler.push(erzeugeSpieler(data, startDate, endDate, FELDSPIELER))
+        }
+    }
 }
 
 function erzeugeSpieltagspaarungen(data, spieltagNullBasiert) {
@@ -126,56 +175,9 @@ function erzeugeSaisons(data) {
     }
 }
 
-function addEventHandler(data) {
-    document
-        .getElementById("voriger-spieltag")
-        .addEventListener("click", () => { vorigerSpieltag(data) })
-    document
-        .getElementById("naechster-spieltag")
-        .addEventListener("click", () => { naechsterSpieltag(data) })
+function addEventHandler(data, node) {
+    node.querySelector('#voriger-spieltag').addEventListener("click", () => { vorigerSpieltag(data) })
+    node.querySelector('#naechster-spieltag').addEventListener("click", () => { naechsterSpieltag(data) })
 }
 
-function fillMannschaftenWithSpieler(data) {
-    const today = new Date()
-    const startDate = new Date(today.getTime() - 1000 * 60 * 60 * 24 * 365 * 40) // max. 40 Jahre alt
-    const endDate = new Date(today.getTime() - 1000 * 60 * 60 * 24 * 365 * 16) // min. 16 Jahre alt
 
-    for (const mannschaft of Object.values(data.mannschaften)) {
-        mannschaft.spieler = []
-
-        // drei Torhüter
-        for (let i = 0; i < 3; i++) {
-            mannschaft.spieler.push({
-                name:
-                    data.namen.vornamen[randomInt(0, data.namen.vornamen.length)] +
-                    " " +
-                    data.namen.nachnamen[randomInt(0, data.namen.nachnamen.length)],
-                spielstaerke: {
-                    tor: randomInt(30, 100),
-                    verteidigung: randomInt(0, 30),
-                    mittelfeld: randomInt(0, 30),
-                    angriff: randomInt(0, 30)
-                },
-                geburtsdatum: randomDate(startDate, endDate)
-            })
-        }
-
-        // 15 Feldspieler
-        for (let i = 0; i < 15; i++) {
-            mannschaft.spieler.push({
-                name:
-                    data.namen.vornamen[randomInt(0, data.namen.vornamen.length)] +
-                    " " +
-                    data.namen.nachnamen[randomInt(0, data.namen.nachnamen.length)],
-                spielstaerke: {
-                    tor: randomInt(0, 30),
-                    verteidigung: randomInt(30, 100),
-                    mittelfeld: randomInt(30, 100),
-                    angriff: randomInt(30, 100)
-                },
-                geburtsdatum: randomDate(startDate, endDate)
-            })
-        }
-        console.log(mannschaft)
-    }
-}

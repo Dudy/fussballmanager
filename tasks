@@ -1,5 +1,5 @@
 ----- Gameplay
-[ ] füge Spieler zu Mannschaften hinzu
+[x] füge Spieler zu Mannschaften hinzu
 [ ] mach das Ergebnis eines Spiels nicht mehr zufällig, sondern abhängig von den Eigenschaften der Spieler
 [x] benutze den Spielplan, um die Spieltage zu erstellen, nicht den Zufall
 [ ] Spieltag
@@ -34,4 +34,4 @@
 [x] einfache Buttons
 [x] einfaches Color Scheme
 [ ] Navigation inkl. mehrerer Unterseiten (z.B. Spieltag, Mannschaft, Finanzen, Immobilien)
-[ ] Subnavigation links
+[x] Subnavigation links
