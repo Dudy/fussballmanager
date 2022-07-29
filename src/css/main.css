@@ -37,6 +37,7 @@ main {
     justify-content: space-between;
     border: solid 1px black;
     padding: 1rem;
+    width: 80rem;
 }
 
 #inhalt p {
@@ -47,6 +48,10 @@ button {
     background-color: var(--dark);
     color: var(--very-light);
     padding: 1rem 0.5rem;
+    border: none;
+}
+
+.no-border {
     border: none;
 }
 

@@ -20,6 +20,8 @@
         [ ] Stadion (Stehplätze, Sitzplätze, VIP Bereich, Catering, Merchandising)
         [ ] Internat (Nachwuchsarbeit)
         [ ] medizinische Abteilung (Erste Hilfe, Physio, Regeneration)
+[ ] füge einen Spieler hinzu, also die Möglichkeit, dass ein Mensch das Spiel spielt ;-)
+[ ] füge die Rückrunde hinzu
 
 ----- interne Logik
 [x] lagere Daten (Mannschaftsnamen) in eine Datei aus und lese sie separat ein
@@ -34,4 +36,10 @@
 [x] einfache Buttons
 [x] einfaches Color Scheme
 [ ] Navigation inkl. mehrerer Unterseiten (z.B. Spieltag, Mannschaft, Finanzen, Immobilien)
+        [x] Übersicht
+        [o] Aufstellung
 [x] Subnavigation links
+[ ] Header einfügen auf "Übersicht", genauso wie auf "Aufstellung"
+[ ] Sortieren bei Klick auf Tabelle "Spieler" auf Seite "Aufstellung"
+        [ ] Die Spalte "Stärken" soll dabei die verschiedenen Arten T, V, M und A durchiterieren. Die aktuelle Art soll im Header fett sein.
+[ ] Drag'n'Drop für Spieler von der Bank in die Startelf und umgekehrt.

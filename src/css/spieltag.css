@@ -1,3 +1,4 @@
+/* ----- Übersicht ----- */
 .left-aligned-children cell {
     text-align: left;
 }
@@ -12,7 +13,9 @@
     display: flex;
     justify-content: space-between;
 }
-column {
+.tabelle column,
+.aktionen column,
+.spieltag column {
     display: flex;
     flex-direction: column;
 }
@@ -42,7 +45,7 @@ cell {
 .tabelle [data-type="platz"] {
     width: 3rem;
 }
-.tabelle [data-type="name"] {
+.tabelle [data-type="mannschaftsname"] {
     width: 14rem;
 }
 .tabelle [data-type="spiele"],
@@ -60,4 +63,85 @@ cell {
 }
 .spieltag [data-type="ergebnis"] {
     width: 5rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ----- Aufstellung ----- */
+.flex-bank {
+    display: flex;
+    justify-content: space-between;
+}
+
+.bank .spielername {
+    width: 15rem;
+}
+.bank .position {
+    width: 8rem;
+}
+.bank .staerke {
+    width: 10rem;
+}
+
+.flex-bank .position cell {
+    text-transform: capitalize;
+}
+
+.bank column {
+    display: flex;
+    flex-direction: column;
+}
+.startelf column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-startelf {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: solid 1px black;
+    padding: 2rem 2rem 0 2rem;
+}
+
+.flex-startelf row {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 2rem;
+}
+
+.flex-startelf cell {
+    width: 3rem;
+    text-align: center;
+}
+
+.header {
+    display: flex;
+    align-items: stretch;
+    border-bottom: solid 2px black;;
+}
+
+.startelf .header column {
+    flex: 1;
+}
+.startelf .header column cell {
+    width: auto;
 }

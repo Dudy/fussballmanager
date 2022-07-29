@@ -1,22 +1,7 @@
-import { vorigerSpieltag, naechsterSpieltag } from './aktionen.js'
-import { fillTabelle, fillSpieltag } from './uiAktualisierungen.js'
 import { randomDate, randomInt } from './utils.js'
+import { data } from './data.js'
 
-export async function init(data) {
-    await initData(data)
-    erzeugeSaisons(data)
-    
-    const spieltagElement = document.querySelector('#spieltagUebersichtTemplate').content.cloneNode(true)
-    fillTabelle(data, spieltagElement)
-    fillSpieltag(data, spieltagElement)
-    addEventHandler(data, spieltagElement)
-    document.querySelector('#inhalt').replaceChildren(spieltagElement)
-    
-    const subnavigationElement = document.querySelector('#subnavigationTemplate').content.cloneNode(true)
-    document.querySelector('#subnavigation').replaceChildren(subnavigationElement)
-}
-
-async function initData(data) {
+export async function init() {
     data.mannschaften = await (
         await fetch("http://localhost:8080/js/mannschaften.json")
     ).json()
@@ -29,10 +14,11 @@ async function initData(data) {
     ).json()
     data.saisons = []
 
-    fillMannschaftenWithSpieler(data)
+    fuegeSpielerZuMannschaftenHinzu()
+    erzeugeSaisons()
 }
 
-function erzeugeSpieler(data, startDate, endDate, istTorwart) {
+function erzeugeSpieler(startDate, endDate, istTorwart) {
     return {
         name:
             data.namen.vornamen[randomInt(0, data.namen.vornamen.length)] +
@@ -48,7 +34,7 @@ function erzeugeSpieler(data, startDate, endDate, istTorwart) {
     }
 }
 
-function fillMannschaftenWithSpieler(data) {
+function fuegeSpielerZuMannschaftenHinzu() {
     const today = new Date()
     const startDate = new Date(today.getTime() - 1000 * 60 * 60 * 24 * 365 * 40) // max. 40 Jahre alt
     const endDate = new Date(today.getTime() - 1000 * 60 * 60 * 24 * 365 * 16) // min. 16 Jahre alt
@@ -60,17 +46,17 @@ function fillMannschaftenWithSpieler(data) {
 
         // drei Torhüter
         for (let i = 0; i < 3; i++) {
-            mannschaft.spieler.push(erzeugeSpieler(data, startDate, endDate, TORWART))
+            mannschaft.spieler.push(erzeugeSpieler(startDate, endDate, TORWART))
         }
 
         // 15 Feldspieler
         for (let i = 0; i < 15; i++) {
-            mannschaft.spieler.push(erzeugeSpieler(data, startDate, endDate, FELDSPIELER))
+            mannschaft.spieler.push(erzeugeSpieler(startDate, endDate, FELDSPIELER))
         }
     }
 }
 
-function erzeugeSpieltagspaarungen(data, spieltagNullBasiert) {
+function erzeugeSpieltagspaarungen(spieltagNullBasiert) {
     // siehe https://de.wikipedia.org/wiki/Spielplan_(Sport)
 
     // sei die Anzahl der Mannschaften z = 18
@@ -140,7 +126,7 @@ function erzeugeSpieltagspaarungen(data, spieltagNullBasiert) {
     return spiele
 }
 
-function erzeugeSaisons(data) {
+function erzeugeSaisons() {
     data.saisons = {
         2022: {
         saison: "2022/2023",
@@ -160,7 +146,7 @@ function erzeugeSaisons(data) {
         }
         saison.spieltage[spieltagIndex] = spieltag
 
-        const spieltagspaarungen = erzeugeSpieltagspaarungen(data, spieltagIndex)
+        const spieltagspaarungen = erzeugeSpieltagspaarungen(spieltagIndex)
         for (let spielIndex = 0; spielIndex < spieltagspaarungen.length; spielIndex++) {
             spieltag.spiele[spielIndex] = {
                 datum: datum.toISOString(),
@@ -174,10 +160,3 @@ function erzeugeSaisons(data) {
         datum.setDate(datum.getDate() + 7)
     }
 }
-
-function addEventHandler(data, node) {
-    node.querySelector('#voriger-spieltag').addEventListener("click", () => { vorigerSpieltag(data) })
-    node.querySelector('#naechster-spieltag').addEventListener("click", () => { naechsterSpieltag(data) })
-}
-
-

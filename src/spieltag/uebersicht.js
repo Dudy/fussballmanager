@@ -1,3 +1,22 @@
+import { data } from '../js/data.js'
+import { createCell, formatDatum } from '../js/utils.js'
+import { init as initSubnavigation } from './subnavigation.js'
+
+export function show() {
+    const spieltagElement = document.querySelector('#spieltagUebersichtTemplate').content.cloneNode(true)
+    fillTabelle(spieltagElement)
+    fillSpieltag(spieltagElement)
+    document.querySelector('#inhalt').replaceChildren(spieltagElement)
+    
+    addEventHandler()
+    initSubnavigation('uebersicht')
+}
+
+function addEventHandler() {
+    document.querySelector('#voriger-spieltag').addEventListener('click', vorigerSpieltag)
+    document.querySelector('#naechster-spieltag').addEventListener('click', naechsterSpieltag)
+}
+
 function addSpieltagToTabelle(tabelle, spieltag) {
     for (const id of Object.keys(spieltag.spiele)) {
         const spiel = spieltag.spiele[id]
@@ -23,19 +42,7 @@ function addSpieltagToTabelle(tabelle, spieltag) {
         }
     }
 }
-
-function formatDatum(datum) {
-    if (datum instanceof Date) {
-        return datum.toLocaleDateString("DE-de", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric"
-        })
-    } else {
-        return formatDatum(new Date(datum))
-    }
-}
-  
+ 
 function mannschaftComparator(mannschaft0, mannschaft1) {
     if (mannschaft0.punkte > mannschaft1.punkte) {
         return -1
@@ -60,15 +67,8 @@ function mannschaftComparator(mannschaft0, mannschaft1) {
         }
     }
 }
-  
-function createCell(text) {
-    const cellNode = document.createElement("cell")
-    const textNode = document.createTextNode(text)
-    cellNode.appendChild(textNode)
-    return cellNode
-}
 
-export function fillTabelle(data, node = document.querySelector('#inhalt')) {
+export function fillTabelle(node = document.querySelector('#inhalt')) {
     const spieltage = data.saisons[data.aktuelleSaison].spieltage
   
     const tabelle = {
@@ -95,9 +95,9 @@ export function fillTabelle(data, node = document.querySelector('#inhalt')) {
     if (data.aktuellerSpieltag === -1) {
         // ... Initialbefüllung, wenn vor dem ersten Spieltag
         nameDaten = Array.from(tabelle.mannschaften, (mannschaft) => createCell(data.mannschaften[mannschaft.id].name))
-        spieleDaten = Array.from({ length: tabelle.mannschaften.length }, () => createCell("0"))
-        toreDaten = Array.from({ length: tabelle.mannschaften.length }, () => createCell("0:0"))
-        punkteDaten = Array.from({ length: tabelle.mannschaften.length }, () => createCell("0"))
+        spieleDaten = Array.from({ length: tabelle.mannschaften.length }, () => createCell('0'))
+        toreDaten = Array.from({ length: tabelle.mannschaften.length }, () => createCell('0:0'))
+        punkteDaten = Array.from({ length: tabelle.mannschaften.length }, () => createCell('0'))
     } else {
         // ... berechnetem aktuellen Tabellenstand, wenn an einem gegebenen Spieltag
     
@@ -113,13 +113,13 @@ export function fillTabelle(data, node = document.querySelector('#inhalt')) {
         // Nach der Berechnung der Tabelle des aktuellen Spieltags kann man jetzt einfach die Daten rausmappen.
         nameDaten = Array.from(tabelle.mannschaften, (mannschaft) => createCell(data.mannschaften[mannschaft.id].name))
         spieleDaten = Array.from(tabelle.mannschaften, (mannschaft) => createCell(mannschaft.spiele))
-        toreDaten = Array.from(tabelle.mannschaften, (mannschaft) => createCell(mannschaft.tore + ":" + mannschaft.gegentore))
+        toreDaten = Array.from(tabelle.mannschaften, (mannschaft) => createCell(mannschaft.tore + ':' + mannschaft.gegentore))
         punkteDaten = Array.from(tabelle.mannschaften, (mannschaft) => createCell(mannschaft.punkte))
     }
   
     // Überschrift davorsetzen
     platzDaten.unshift(createCell("Platz"))
-    nameDaten.unshift(createCell("Name"))
+    nameDaten.unshift(createCell("Mannschaftsname"))
     spieleDaten.unshift(createCell("Spiele"))
     toreDaten.unshift(createCell("Tore"))
     punkteDaten.unshift(createCell("Punkte"))
@@ -129,7 +129,7 @@ export function fillTabelle(data, node = document.querySelector('#inhalt')) {
         .querySelector('.tabelle [data-type="platz"]')
         .replaceChildren(...platzDaten)
     node
-        .querySelector('.tabelle [data-type="name"]')
+        .querySelector('.tabelle [data-type="mannschaftsname"]')
         .replaceChildren(...nameDaten)
     node
         .querySelector('.tabelle [data-type="spiele"]')
@@ -140,14 +140,14 @@ export function fillTabelle(data, node = document.querySelector('#inhalt')) {
     node
         .querySelector('.tabelle [data-type="punkte"]')
         .replaceChildren(...punkteDaten)
-  }
-  
-export function fillSpieltag(data, node = document.querySelector('#inhalt')) {
+}
+
+export function fillSpieltag(node = document.querySelector('#inhalt')) {
     const spieltage = data.saisons[data.aktuelleSaison].spieltage
   
     // im Code ist der erste Spieltag am Index 0, aber wir zeigen auf der UI natürlich "1" an
     node
-        .querySelector(".spieltag p span")
+        .querySelector('.spieltag p span')
         .textContent = data.aktuellerSpieltag + 1
   
     let datumDaten
@@ -192,4 +192,20 @@ export function fillSpieltag(data, node = document.querySelector('#inhalt')) {
     node
         .querySelector('.spieltag [data-type="gast"]')
         .replaceChildren(...gastDaten)
+}
+
+function vorigerSpieltag() {
+    if (data.aktuellerSpieltag > -1) {
+        data.aktuellerSpieltag -= 1
+        fillTabelle()
+        fillSpieltag()
+    }
+}
+
+function naechsterSpieltag() {
+    if (data.aktuellerSpieltag < data.anzahlSpieltage - 1) {
+        data.aktuellerSpieltag += 1
+        fillTabelle()
+        fillSpieltag()
+    }
 }

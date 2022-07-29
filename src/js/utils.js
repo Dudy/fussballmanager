@@ -16,3 +16,39 @@ export function randomDate(start, end) {
         return new Date()
     }
 }
+
+export function formatDatum(datum) {
+    if (datum instanceof Date) {
+        return datum.toLocaleDateString('DE-de', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        })
+    } else {
+        return formatDatum(new Date(datum))
+    }
+}
+
+export function padWithZero(num, targetLength) {
+    return String(num).padStart(targetLength, '0')
+}
+
+export function createCell(text, emphasizes = []) {
+    if (!Array.isArray(text)) {
+        text = [text]
+    }
+    const cellNode = document.createElement('cell')
+
+    for (let i = 0; i < text.length; i++) {
+        const textNode = document.createTextNode(text[i])
+        if (emphasizes.includes(i)) {
+            const boldNode = document.createElement('b')
+            boldNode.appendChild(textNode)
+            cellNode.appendChild(boldNode)
+        } else {
+            cellNode.appendChild(textNode)
+        }
+    }
+    
+    return cellNode
+}
