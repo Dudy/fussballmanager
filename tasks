@@ -28,7 +28,7 @@
 [ ] überlege, ob der Spieltag überall Eins-basiert sein sollte oder weiterhin Null-basiert
 
 ----- UI
-[ ] mache die Spalten immer gleich groß (Tabelle und Spieltag)
+[x] mache die Spalten immer gleich groß (Tabelle und Spieltag)
 [x] Navigationsleiste
 [x] CSS Organisation
 [x] einfache Buttons

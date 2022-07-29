@@ -38,3 +38,26 @@ cell {
 .flex-spieltag {
     display: flex;
 }
+
+.tabelle [data-type="platz"] {
+    width: 3rem;
+}
+.tabelle [data-type="name"] {
+    width: 14rem;
+}
+.tabelle [data-type="spiele"],
+.tabelle [data-type="tore"],
+.tabelle [data-type="punkte"] {
+    width: 4rem;
+}
+
+.spieltag [data-type="datum"] {
+    width: 6rem;
+}
+.spieltag [data-type="heim"],
+.spieltag [data-type="gast"] {
+    width: 14rem;
+}
+.spieltag [data-type="ergebnis"] {
+    width: 5rem;
+}
