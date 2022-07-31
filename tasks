@@ -1,11 +1,12 @@
 ----- Gameplay
 [x] füge Spieler zu Mannschaften hinzu
-[ ] mach das Ergebnis eines Spiels nicht mehr zufällig, sondern abhängig von den Eigenschaften der Spieler
+[!] mach das Ergebnis eines Spiels nicht mehr zufällig, sondern abhängig von den Eigenschaften der Spieler
+        [!] das beinhaltet ein irgendwie geartetes Aufstellen einer Startelf für alle Mannschaften (ausser der des Managers)
 [x] benutze den Spielplan, um die Spieltage zu erstellen, nicht den Zufall
-[ ] Spieltag
+[x] Spieltag
         [x] aktuelle Tabelle
         [x] Spiele des Spieltags
-        [ ] Aufstellung meiner Mannschaft
+        [x] Aufstellung meiner Mannschaft
 [ ] Mannschaft
         [ ] Teamtraining
         [ ] Individualtraining (Spieler)
@@ -44,14 +45,14 @@
 [ ] Header einfügen auf "Übersicht", genauso wie auf "Aufstellung"
 [ ] Sortieren bei Klick auf Tabelle "Spieler" auf Seite "Aufstellung"
         [ ] Die Spalte "Stärken" soll dabei die verschiedenen Arten T, V, M und A durchiterieren. Die aktuelle Art soll im Header fett sein.
-[ ] Drag'n'Drop für Spieler aus der Mannschaft in die Startelf ...
+[x] Drag'n'Drop für Spieler aus der Mannschaft in die Startelf ...
         [ ] ... und umgekehrt
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Commit Notizen
-- typo in HTML Code
-- Semikolon überall eingefügt (ich versuche, mich an die AirBnb JS Code Conventions zu halten)
-- "fuegeSpielerZuMannschaftenHinzu" vereinfacht und Rückennummern dazugenommen (die sollen später HTML-IDs der Spieler werden)
-- createCell kann per Parameter Cells nun mit einem ID-Attribut versehen und auch ein draggable-Attribut erzeugen
-- "Bank" in "Mannschaft" umbenannt
-- Drag'N'Drop von Spielern aus der Mannschaft in die Startelf
-- das "Mannschaft"-Objekt hat jetzt eine "Startelf" Map
+- 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Agenda
+[ ] steht noch aus
+[x] hab ich fertig
+[o] bin ich dran
+[!] kommt als nächstes
