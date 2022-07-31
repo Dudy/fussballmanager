@@ -25,7 +25,7 @@
                     <div class="spinner"></div>
                     <p>lade Daten ...</p>
                 </div>
-            </secti>
+            </section>
         </main>
         
         <template id="subnavigationTemplate">
@@ -91,15 +91,17 @@
         </template>
 
         <template id="spieltagAufstellungTemplate">
-            <div class="bank">
-                <p>Bank</p>
+            <div class="mannschaft">
+                <p>Mannschaft</p>
                 <div class="header">
+                    <column class="right-aligned-children rueckennummer"><cell>#</cell></column>
                     <column class="left-aligned-children spielername"><cell>Spieler</cell></column>
                     <column class="left-aligned-children position"><cell>beste Position</cell></column>
                     <column class="left-aligned-children staerke"><cell>Stärken (T/V/M/A)</cell></column>
                 </div>
             
-                <div class="flex-bank">
+                <div class="flex-mannschaft">
+                    <column class="right-aligned-children rueckennummer" data-type="rueckennummer"></column>
                     <column class="left-aligned-children spielername" data-type="spielername"></column>
                     <column class="left-aligned-children position" data-type="position"></column>
                     <column class="left-aligned-children staerke" data-type="staerke"></column>
@@ -112,39 +114,40 @@
                 <div class="header">
                     <column class="left-aligned-children startelfheader"><cell>Aufstellung (System: 4 - 4 - 2)</cell></column>
                 </div>
+
                 <div class="flex-startelf">
                     <row>
                         <cell class="no-border"></cell>
                         <cell class="no-border"></cell>
-                        <cell>LA</cell>
+                        <cell data-position="LA">LA</cell>
                         <cell class="no-border"></cell>
-                        <cell>RA</cell>
+                        <cell data-position="RA">RA</cell>
                         <cell class="no-border"></cell>
                         <cell class="no-border"></cell>
                     </row>
                     <row>
-                        <cell>LM</cell>
+                        <cell data-position="LM">LM</cell>
                         <cell class="no-border"></cell>
-                        <cell>ZM</cell>
+                        <cell data-position="LZM">LZM</cell>
                         <cell class="no-border"></cell>
-                        <cell>ZM</cell>
+                        <cell data-position="RZM">RZM</cell>
                         <cell class="no-border"></cell>
-                        <cell>RM</cell>
+                        <cell data-position="RM">RM</cell>
                     </row>
                     <row>
-                        <cell>LV</cell>
+                        <cell data-position="LV">LV</cell>
                         <cell class="no-border"></cell>
-                        <cell>IV</cell>
+                        <cell data-position="LIV">LIV</cell>
                         <cell class="no-border"></cell>
-                        <cell>IV</cell>
+                        <cell data-position="RIV">RIV</cell>
                         <cell class="no-border"></cell>
-                        <cell>RV</cell>
+                        <cell data-position="RV">RV</cell>
                     </row>
                     <row>
                         <cell class="no-border"></cell>
                         <cell class="no-border"></cell>
                         <cell class="no-border"></cell>
-                        <cell>TW</cell>
+                        <cell data-position="TW">TW</cell>
                         <cell class="no-border"></cell>
                         <cell class="no-border"></cell>
                         <cell class="no-border"></cell>

@@ -86,26 +86,29 @@ cell {
 
 
 /* ----- Aufstellung ----- */
-.flex-bank {
+.flex-mannschaft {
     display: flex;
     justify-content: space-between;
 }
 
-.bank .spielername {
+.mannschaft .rueckennummer {
+    width: 2rem;
+}
+.mannschaft .spielername {
     width: 15rem;
 }
-.bank .position {
+.mannschaft .position {
     width: 8rem;
 }
-.bank .staerke {
+.mannschaft .staerke {
     width: 10rem;
 }
 
-.flex-bank .position cell {
+.flex-mannschaft .position cell {
     text-transform: capitalize;
 }
 
-.bank column {
+.mannschaft column {
     display: flex;
     flex-direction: column;
 }

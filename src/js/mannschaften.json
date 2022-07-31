@@ -1,56 +1,290 @@
 {
     "0": {
-        "name": "Arminia Bielefeld"
+        "name": "Arminia Bielefeld",
+        "startelf": {
+            "LA": "",
+            "RA": "",
+            "LM": "",
+            "LZM": "",
+            "RZM": "",
+            "RM": "",
+            "LV": "",
+            "LIV": "",
+            "RIV": "",
+            "RV": "",
+            "TW": ""
+        }
     },
     "1": {
-        "name": "1. FSV Mainz 05"
+        "name": "1. FSV Mainz 05",
+        "startelf": {
+            "LA": "",
+            "RA": "",
+            "LM": "",
+            "LZM": "",
+            "RZM": "",
+            "RM": "",
+            "LV": "",
+            "LIV": "",
+            "RIV": "",
+            "RV": "",
+            "TW": ""
+        }
     },
     "2": {
-        "name": "VfB Stuttgart"
+        "name": "VfB Stuttgart",
+        "startelf": {
+            "LA": "",
+            "RA": "",
+            "LM": "",
+            "LZM": "",
+            "RZM": "",
+            "RM": "",
+            "LV": "",
+            "LIV": "",
+            "RIV": "",
+            "RV": "",
+            "TW": ""
+        }
     },
     "3": {
-        "name": "1. FC Kaiserslautern"
+        "name": "1. FC Kaiserslautern",
+        "startelf": {
+            "LA": "",
+            "RA": "",
+            "LM": "",
+            "LZM": "",
+            "RZM": "",
+            "RM": "",
+            "LV": "",
+            "LIV": "",
+            "RIV": "",
+            "RV": "",
+            "TW": ""
+        }
     },
     "4": {
-        "name": "Borussia Dortmund"
+        "name": "Borussia Dortmund",
+        "startelf": {
+            "LA": "",
+            "RA": "",
+            "LM": "",
+            "LZM": "",
+            "RZM": "",
+            "RM": "",
+            "LV": "",
+            "LIV": "",
+            "RIV": "",
+            "RV": "",
+            "TW": ""
+        }
     },
     "5": {
-        "name": "Borussia Mönchengladbach"
+        "name": "Borussia Mönchengladbach",
+        "startelf": {
+            "LA": "",
+            "RA": "",
+            "LM": "",
+            "LZM": "",
+            "RZM": "",
+            "RM": "",
+            "LV": "",
+            "LIV": "",
+            "RIV": "",
+            "RV": "",
+            "TW": ""
+        }
     },
     "6": {
-        "name": "Bayer 04 Leverkusen"
+        "name": "Bayer 04 Leverkusen",
+        "startelf": {
+            "LA": "",
+            "RA": "",
+            "LM": "",
+            "LZM": "",
+            "RZM": "",
+            "RM": "",
+            "LV": "",
+            "LIV": "",
+            "RIV": "",
+            "RV": "",
+            "TW": ""
+        }
     },
     "7": {
-        "name": "Hertha BSC"
+        "name": "Hertha BSC",
+        "startelf": {
+            "LA": "",
+            "RA": "",
+            "LM": "",
+            "LZM": "",
+            "RZM": "",
+            "RM": "",
+            "LV": "",
+            "LIV": "",
+            "RIV": "",
+            "RV": "",
+            "TW": ""
+        }
     },
     "8": {
-        "name": "1. FC Nürnberg"
+        "name": "1. FC Nürnberg",
+        "startelf": {
+            "LA": "",
+            "RA": "",
+            "LM": "",
+            "LZM": "",
+            "RZM": "",
+            "RM": "",
+            "LV": "",
+            "LIV": "",
+            "RIV": "",
+            "RV": "",
+            "TW": ""
+        }
     },
     "9": {
-        "name": "Hannover 96"
+        "name": "Hannover 96",
+        "startelf": {
+            "LA": "",
+            "RA": "",
+            "LM": "",
+            "LZM": "",
+            "RZM": "",
+            "RM": "",
+            "LV": "",
+            "LIV": "",
+            "RIV": "",
+            "RV": "",
+            "TW": ""
+        }
     },
     "10": {
-        "name": "Eintracht Frankfurt"
+        "name": "Eintracht Frankfurt",
+        "startelf": {
+            "LA": "",
+            "RA": "",
+            "LM": "",
+            "LZM": "",
+            "RZM": "",
+            "RM": "",
+            "LV": "",
+            "LIV": "",
+            "RIV": "",
+            "RV": "",
+            "TW": ""
+        }
     },
     "11": {
-        "name": "FC Bayern München"
+        "name": "FC Bayern München",
+        "startelf": {
+            "LA": "",
+            "RA": "",
+            "LM": "",
+            "LZM": "",
+            "RZM": "",
+            "RM": "",
+            "LV": "",
+            "LIV": "",
+            "RIV": "",
+            "RV": "",
+            "TW": ""
+        }
     },
     "12": {
-        "name": "VfL Wolfsburg"
+        "name": "VfL Wolfsburg",
+        "startelf": {
+            "LA": "",
+            "RA": "",
+            "LM": "",
+            "LZM": "",
+            "RZM": "",
+            "RM": "",
+            "LV": "",
+            "LIV": "",
+            "RIV": "",
+            "RV": "",
+            "TW": ""
+        }
     },
     "13": {
-        "name": "FC Schalke 04"
+        "name": "FC Schalke 04",
+        "startelf": {
+            "LA": "",
+            "RA": "",
+            "LM": "",
+            "LZM": "",
+            "RZM": "",
+            "RM": "",
+            "LV": "",
+            "LIV": "",
+            "RIV": "",
+            "RV": "",
+            "TW": ""
+        }
     },
     "14": {
-        "name": "MSV Duisburg"
+        "name": "MSV Duisburg",
+        "startelf": {
+            "LA": "",
+            "RA": "",
+            "LM": "",
+            "LZM": "",
+            "RZM": "",
+            "RM": "",
+            "LV": "",
+            "LIV": "",
+            "RIV": "",
+            "RV": "",
+            "TW": ""
+        }
     },
     "15": {
-        "name": "1. FC Köln"
+        "name": "1. FC Köln",
+        "startelf": {
+            "LA": "",
+            "RA": "",
+            "LM": "",
+            "LZM": "",
+            "RZM": "",
+            "RM": "",
+            "LV": "",
+            "LIV": "",
+            "RIV": "",
+            "RV": "",
+            "TW": ""
+        }
     },
     "16": {
-        "name": "Werder Bremen"
+        "name": "Werder Bremen",
+        "startelf": {
+            "LA": "",
+            "RA": "",
+            "LM": "",
+            "LZM": "",
+            "RZM": "",
+            "RM": "",
+            "LV": "",
+            "LIV": "",
+            "RIV": "",
+            "RV": "",
+            "TW": ""
+        }
     },
     "17": {
-        "name": "Hamburger SV"
+        "name": "Hamburger SV",
+        "startelf": {
+            "LA": "",
+            "RA": "",
+            "LM": "",
+            "LZM": "",
+            "RZM": "",
+            "RM": "",
+            "LV": "",
+            "LIV": "",
+            "RIV": "",
+            "RV": "",
+            "TW": ""
+        }
     }
 }

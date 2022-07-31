@@ -20,7 +20,7 @@
         [ ] Stadion (Stehplätze, Sitzplätze, VIP Bereich, Catering, Merchandising)
         [ ] Internat (Nachwuchsarbeit)
         [ ] medizinische Abteilung (Erste Hilfe, Physio, Regeneration)
-[ ] füge einen Spieler hinzu, also die Möglichkeit, dass ein Mensch das Spiel spielt ;-)
+[ ] füge einen "Manager" hinzu, also die Möglichkeit, dass ein Mensch das Spiel spielt ;-)
 [ ] füge die Rückrunde hinzu
 
 ----- interne Logik
@@ -28,6 +28,8 @@
 [x] organisieren den Code besser
 [ ] überlege, ob die Spieltage, Spiele etc. Maps oder Arrays sein sollten
 [ ] überlege, ob der Spieltag überall Eins-basiert sein sollte oder weiterhin Null-basiert
+[ ] führe "erzeugeSpielpaarungen" nicht immer wieder zur Startzeit aus, sondern hartkodiere es in einer JSON Datei
+[x] in "Aufstellung, benenne "Bank" in "Mannschaft" um
 
 ----- UI
 [x] mache die Spalten immer gleich groß (Tabelle und Spieltag)
@@ -42,4 +44,14 @@
 [ ] Header einfügen auf "Übersicht", genauso wie auf "Aufstellung"
 [ ] Sortieren bei Klick auf Tabelle "Spieler" auf Seite "Aufstellung"
         [ ] Die Spalte "Stärken" soll dabei die verschiedenen Arten T, V, M und A durchiterieren. Die aktuelle Art soll im Header fett sein.
-[ ] Drag'n'Drop für Spieler von der Bank in die Startelf und umgekehrt.
+[ ] Drag'n'Drop für Spieler aus der Mannschaft in die Startelf ...
+        [ ] ... und umgekehrt
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Commit Notizen
+- typo in HTML Code
+- Semikolon überall eingefügt (ich versuche, mich an die AirBnb JS Code Conventions zu halten)
+- "fuegeSpielerZuMannschaftenHinzu" vereinfacht und Rückennummern dazugenommen (die sollen später HTML-IDs der Spieler werden)
+- createCell kann per Parameter Cells nun mit einem ID-Attribut versehen und auch ein draggable-Attribut erzeugen
+- "Bank" in "Mannschaft" umbenannt
+- Drag'N'Drop von Spielern aus der Mannschaft in die Startelf
+- das "Mannschaft"-Objekt hat jetzt eine "Startelf" Map
