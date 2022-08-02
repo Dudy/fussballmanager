@@ -15,6 +15,7 @@ export async function init() {
     data.saisons = [];
 
     fuegeSpielerZuMannschaftenHinzu();
+    erstelleStartelfs();
     erzeugeSaisons();
 }
 
@@ -49,6 +50,57 @@ function fuegeSpielerZuMannschaftenHinzu() {
         for (let i = 0; i < 18; i++) {
             mannschaft.spieler.push(erzeugeSpieler(rueckennummern[i], startDate, endDate, i < 3));
         }
+    }
+}
+
+function erstelleStartelfs() {
+    // - erzeuge neues Arrays mit allen Spielern
+    // - Angriff
+    //   - sortiere Array nach "Angriff" Stärke
+    //   - nimm die zwei stärksten Spieler
+    //   - setze sie auf LA und RA
+    //   - entferne sie aus dem Array
+    // - Mittelfeld
+    //   - sortiere Array nach "Mittelfeld" Stärke
+    //   - nimm die vier stärksten Spieler
+    //   - setze sie auf LM, LZM, RZM und RM
+    //   - entferne sie aus dem Array
+    // - Verteidigung
+    //   - sortiere Array nach "Verteidigung" Stärke
+    //   - nimm die vier stärksten Spieler
+    //   - setze sie auf LV, LIV, RIV und RV
+    //   - entferne sie aus dem Array
+    // - Torwart
+    //   - sortiere Array nach "Torwart" Stärke
+    //   - nimm den stärksten Spieler
+    //   - setze ihn auf TW
+
+    function getSpielerComparatorAufPosition(position) {
+        return function vergleicheZweiSpielerAufGegebenerPosition(einSpieler, andererSpieler) {
+            return andererSpieler.spielstaerke[position] - einSpieler.spielstaerke[position];
+        };
+    }
+
+    for (const mannschaft of Object.values(data.mannschaften)) {
+        const alleSpieler = Array.from(mannschaft.spieler);
+        alleSpieler.sort(getSpielerComparatorAufPosition('angriff'));
+        mannschaft.startelf['LA'] = alleSpieler.shift().rueckennummer.toString()
+        mannschaft.startelf['RA'] = alleSpieler.shift().rueckennummer.toString()
+
+        alleSpieler.sort(getSpielerComparatorAufPosition('mittelfeld'));
+        mannschaft.startelf['LM'] = alleSpieler.shift().rueckennummer.toString()
+        mannschaft.startelf['LZM'] = alleSpieler.shift().rueckennummer.toString()
+        mannschaft.startelf['RZM'] = alleSpieler.shift().rueckennummer.toString()
+        mannschaft.startelf['RM'] = alleSpieler.shift().rueckennummer.toString()
+        
+        alleSpieler.sort(getSpielerComparatorAufPosition('verteidigung'));
+        mannschaft.startelf['LV'] = alleSpieler.shift().rueckennummer.toString()
+        mannschaft.startelf['LIV'] = alleSpieler.shift().rueckennummer.toString()
+        mannschaft.startelf['RIV'] = alleSpieler.shift().rueckennummer.toString()
+        mannschaft.startelf['RV'] = alleSpieler.shift().rueckennummer.toString()
+
+        alleSpieler.sort(getSpielerComparatorAufPosition('tor'));
+        mannschaft.startelf['TW'] = alleSpieler.shift().rueckennummer.toString()
     }
 }
 
