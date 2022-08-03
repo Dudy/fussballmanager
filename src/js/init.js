@@ -1,4 +1,4 @@
-import { randomDate, randomInt, shuffle } from './utils.js';
+import { randomDate, randomInt, randomBool, shuffle } from './utils.js';
 import { data } from './data.js';
 
 export async function init() {
@@ -131,6 +131,7 @@ function erzeugeSaisons() {
 
         const spieltagspaarungen = data.spieltage[spieltagIndex];
         for (let spielIndex = 0; spielIndex < spieltagspaarungen.length; spielIndex++) {
+            const [heimtore, gasttore] = spielSpielen(spieltagspaarungen[spielIndex].heim, spieltagspaarungen[spielIndex].gast)
             spieltag.spiele[spielIndex] = {
                 datum: datum.toISOString(),
                 heim: spieltagspaarungen[spielIndex].heim,
@@ -142,4 +143,63 @@ function erzeugeSaisons() {
 
         datum.setDate(datum.getDate() + 7);
     }
+}
+
+function spielSpielen(heimindex, gastindex) {
+    const HEIM = true
+    const GAST = false
+
+    const heimmannschaft = data.mannschaften[heimindex]
+    const gastmannschaft = data.mannschaften[gastindex]
+
+    // Team ermitteln, das Anstoß hat
+    // 10 Ballaktionen pro Minute simulieren
+    // nach Anpfiff beginnt es im Mittelfeld
+    // Ballaktion: ein Spieler hat den Ball, er kann
+    //   - nach Vorne laufen bzw. Dribbeln
+    //   - nach Hinten laufen
+    //   - nach Vorne spielen
+    //   - nach Hinten spielen
+    //   - Querpass
+    //   - Schiessen
+    // Spiel ohne Ball:
+    //   - nach Vorne laufen
+    //   - nach Hinten laufen
+    //
+    // Das Spielfeld wird grob in Fünftel aufgeteilt.
+    //    - Der gegnerische Strafraum ist das Fünftel 0.
+    //    - Die Mitte der gegnerischen Hälfte ist das Fünftel 1.
+    //    - Der Bereich des Mittelkreises ist das Fünftel 2.
+    //    - Die Mitte der eigenen Hälfte ist das Fünftel 3.
+    //    - Der eigene Strafraum ist das Fünftel 4.
+
+
+
+
+
+    // Wer hat Anstoß? Den Ball hat initial der linke zentrale Mittelfeldspieler (LZM).
+    let ballbesitz = randomBool() ? heimmannschaft.startelf.LZM : gastmannschaft.startelf.LZM;
+    let heimtore = 0
+    let gasttore = 0
+
+    // initialisiere Positionen der Spieler (grobe Einteilung des Feldes in Fünftel
+
+    for (let i = 0; i < 90 * 10; i++) { // 90 Minuten, 10 Ballaktionen pro Minute
+        // berechne für den ballführenden Spieler (Werte nach Position, also im Fünftel)
+        //    - (00%, 10%, 20%, 30%, 40%) nach Vorne laufen
+        //    - (10%, 10%, 05%, 05%, 00%) nach Hinten laufen
+        //    - (00%, 10%, 20%, 30%, 40%) nach Vorne spielen
+        //    - (10%, 10%, 05%, 05%, 00%) nach Hinten spielen
+        //    - (20%, 20%, 25%, 20%, 20%) Querpass
+        //    - (60%, 40%, 05%, 00%, 00%) Schiessen
+        //    TODO: jeder Mannschaftsteil sollte seine eigenen Werte haben (Angriff, Mittelfeld, Verteidigung, Torwart)
+        //          der Angreifer wird eher schiessen, der Torwart spielt nie zurück, ...
+        // 
+        // berechne für die anderen Spieler der Mannschaft in Ballbesitz
+        // berechne für alle Spieler der anderen Mannschaft
+    }
+
+    console.log(heimmannschaft);
+
+    return [heimtore, gasttore]
 }
