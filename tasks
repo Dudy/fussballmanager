@@ -30,7 +30,7 @@
 [x] organisieren den Code besser
 [ ] überlege, ob die Spieltage, Spiele etc. Maps oder Arrays sein sollten
 [ ] überlege, ob der Spieltag überall Eins-basiert sein sollte oder weiterhin Null-basiert
-[ ] führe "erzeugeSpielpaarungen" nicht immer wieder zur Startzeit aus, sondern hartkodiere es in einer JSON Datei
+[x] führe "erzeugeSpielpaarungen" nicht immer wieder zur Startzeit aus, sondern hartkodiere es in einer JSON Datei
 [x] in "Aufstellung, benenne "Bank" in "Mannschaft" um
 
 ----- UI
