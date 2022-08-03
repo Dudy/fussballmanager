@@ -2,6 +2,8 @@ import { randomDate, randomInt, shuffle } from './utils.js';
 import { data } from './data.js';
 
 export async function init() {
+    document.querySelector('div.managername p').textContent = data.manager.name
+
     data.mannschaften = await (
         await fetch("http://localhost:8080/js/mannschaften.json")
     ).json();

@@ -10,8 +10,7 @@ export function show() {
     const aufstellungElement = document.querySelector('#spieltagAufstellungTemplate').content.cloneNode(true);
 
     // initiale Befüllung der Mannschaft
-    // TODO: das muss natürlich noch korrigiert werden, später, wenn es "Manager" gibt
-    const meineMannschaft = data.mannschaften[1];
+    const meineMannschaft = data.mannschaften[data.manager.mannschaft];
     const nummerDaten = Array.from(meineMannschaft.spieler, (spieler) => createCell(spieler.rueckennummer, [], RUECKENNUMMER_ID_PREFIX + spieler.rueckennummer, true));
     const nameDaten = Array.from(meineMannschaft.spieler, (spieler) => createCell(spieler.name));
     const positionDaten = Array.from(meineMannschaft.spieler, (spieler) => createCell(ermittlePosition(spieler)));
@@ -75,8 +74,7 @@ function drop_handler(ev) {
             cell.textContent = cell.dataset.position;
             document.querySelector('#' + cell.dataset.id).classList.remove('in-startelf');
             delete cell.dataset.id;
-            // TODO: das muss natürlich noch korrigiert werden, später, wenn es "Manager" gibt
-            data.mannschaften[1].startelf[cell.dataset.position] = '';
+            data.mannschaften[data.manager.mannschaft].startelf[cell.dataset.position] = '';
         }
     });
 
@@ -91,8 +89,7 @@ function drop_handler(ev) {
     ev.target.classList.add('in-startelf');
     ev.target.dataset.id = id;
     ev.target.textContent = id.split('-')[1];
-    // TODO: das muss natürlich noch korrigiert werden, später, wenn es "Manager" gibt
-    data.mannschaften[1].startelf[ev.target.dataset.position] = ev.target.textContent;
+    data.mannschaften[data.manager.mannschaft].startelf[ev.target.dataset.position] = ev.target.textContent;
 }
 function dragover_handler(ev) {
     ev.preventDefault();
