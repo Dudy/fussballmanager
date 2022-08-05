@@ -1,6 +1,6 @@
 ----- Gameplay
 [x] füge Spieler zu Mannschaften hinzu
-[o] mach das Ergebnis eines Spiels nicht mehr zufällig, sondern abhängig von den Eigenschaften der Spieler
+[x] mach das Ergebnis eines Spiels nicht mehr zufällig, sondern abhängig von den Eigenschaften der Spieler
         [x] das beinhaltet ein irgendwie geartetes Aufstellen einer Startelf für alle Mannschaften (ausser der des Managers)
 [x] benutze den Spielplan, um die Spieltage zu erstellen, nicht den Zufall
 [x] Spieltag

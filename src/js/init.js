@@ -50,10 +50,12 @@ function fuegeSpielerZuMannschaftenHinzu() {
         // ein Array mit den zufällig verteilten Zahlen von 1 bis 99 (1 ist immer an erster Stelle, für den ersten Torwart ;-))
         let rueckennummern = [1].concat(shuffle(Array.from({length: 98}, (_, i) => i + 2)));
         mannschaft.spieler = [];
+        mannschaft.spielerNachRueckennummer = {};
 
         // drei Torhüter, 15 Feldspieler
         for (let i = 0; i < 18; i++) {
             mannschaft.spieler.push(erzeugeSpieler(rueckennummern[i], startDate, endDate, i < 3));
+            mannschaft.spielerNachRueckennummer[rueckennummern[i]] = mannschaft.spieler[mannschaft.spieler.length - 1]
         }
     }
 }
@@ -136,8 +138,8 @@ function erzeugeSaisons() {
                 datum: datum.toISOString(),
                 heim: spieltagspaarungen[spielIndex].heim,
                 gast: spieltagspaarungen[spielIndex].gast,
-                toreHeim: randomInt(0, 4),
-                toreGast: randomInt(0, 4)
+                toreHeim: heimtore,
+                toreGast: gasttore
             };
         }
 
@@ -146,6 +148,11 @@ function erzeugeSaisons() {
 }
 
 function spielSpielen(heimindex, gastindex) {
+    return spielSpielen_test3(heimindex, gastindex)
+}
+
+// im folgenden probier ich ein paar Sachen aus
+function spielSpielen_test1(heimindex, gastindex) {
     const HEIM = true
     const GAST = false
 
@@ -200,6 +207,442 @@ function spielSpielen(heimindex, gastindex) {
     }
 
     console.log(heimmannschaft);
+
+    return [heimtore, gasttore]
+}
+
+function spielSpielen_test2(heimindex, gastindex) {
+    const HEIM = true
+    const GAST = false
+    const HEIMDRITTEL = 0;
+    const MITTELFELD = 1;
+    const GASTDRITTEL = 2;
+
+    const heimmannschaft = data.mannschaften[heimindex]
+    const gastmannschaft = data.mannschaften[gastindex]
+
+    const heimAngriff =
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.LA].spielstaerke.angriff +
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.RA].spielstaerke.angriff;
+    const heimMittelfeld =
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.LM].spielstaerke.mittelfeld +
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.LZM].spielstaerke.mittelfeld +
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.RZM].spielstaerke.mittelfeld +
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.RM].spielstaerke.mittelfeld;
+    const heimVerteidigung =
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.LV].spielstaerke.verteidigung +
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.LIV].spielstaerke.verteidigung +
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.RIV].spielstaerke.verteidigung +
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.RV].spielstaerke.verteidigung;
+    const heimTor =
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.TW].spielstaerke.tor;
+
+    const gastAngriff =
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.LA].spielstaerke.angriff +
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.RA].spielstaerke.angriff;
+    const gastMittelfeld =
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.LM].spielstaerke.mittelfeld +
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.LZM].spielstaerke.mittelfeld +
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.RZM].spielstaerke.mittelfeld +
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.RM].spielstaerke.mittelfeld;
+    const gastVerteidigung =
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.LV].spielstaerke.verteidigung +
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.LIV].spielstaerke.verteidigung +
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.RIV].spielstaerke.verteidigung +
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.RV].spielstaerke.verteidigung;
+    const gastTor =
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.TW].spielstaerke.tor;
+
+    // Team ermitteln, das Anstoß hat
+    // 10 Ballaktionen pro Minute simulieren
+    // nach Anpfiff beginnt es im Mittelfeld
+
+    // Ball im Heimdrittel
+    // - vergleiche heimVerteidigung mit gastAngriff
+    // - verwende einen kleinen Zufallsfaktor
+    //     const random = randomInt(0, heimVerteidigung + gastAngriff);
+    //     const sieger = random < heimVerteidigung ? "Heim" : "Gast";
+    // - wenn die ballführende Mannschaft 75% - 100% Sieger ist, und ...
+    //     - die Heimmannschaft den Ball hat, dann wird der Ball ins Mittelfeld gespielt
+    //     - die Gastmannschaft den Ball hat, dann erfolgt ein Torabschluss
+    //         - ein Angreifer der Gastmannschaft wird zufällig ausgewählt (LA oder RA)
+    //         - er geht ins 1:1 gegen den Torwart der Heimmannschaft (selbes Stärke+Zufall-Prinzip wie oben)
+    //             - wenn der Angreifer 75% - 100% Sieger ist, schießt er ein Tor, die Gastmannschaft bekommt ein Tor, die Heimmannschaft den Ball im Mittelfeld
+    //             - wenn der Angreifer 50% - 75% Sieger ist, wehrt der Torwart den Schuss ab, die Gastmannschaft bleibt aber im Ballbesitz
+    //             - wenn der Angreifer 0% - 50% Verlierer ist, hält der Torwart den Ball fest, der Ballbesitz wechselt, die Ballposition ist aber noch das Heimdrittel
+    // - wenn die ballführende Mannschaft 50% - 75% Sieger ist, dann bleibt sie im aktuellen Spielfelddrittel in Ballbesitz
+    // - wenn die ballführende Mannschaft Verlierer ist, dann wechselt der Ballbesitz, bleibt aber im aktuellen Spielfelddrittel
+
+    // Ball im Mittelfeld
+    // - vergleiche heimMittelfeld mit gastMittelfeld
+    // - verwende einen kleinen Zufallsfaktor
+    //     const random = randomInt(0, heimstaerke + gaststaerke);
+    //     const sieger = random < heimstaerke ? "Heim" : "Gast";
+    // - wenn die ballführende Mannschaft 75% - 100% Sieger ist, dann wird der Ball ins nächste Spielfelddrittel gespielt
+    // - wenn die ballführende Mannschaft 50% - 75% Sieger ist, dann bleibt sie im aktuellen Spielfelddrittel in Ballbesitz
+    // - wenn die ballführende Mannschaft Verlierer ist, dann wechselt der Ballbesitz, bleibt aber im aktuellen Spielfelddrittel
+
+    // Ball im Gastdrittel
+    // - wie "Ball im Heimdrittel", nur umgekehrt
+
+    // Initialisierung
+    let ballposition = MITTELFELD;
+    let heimtore = 0
+    let gasttore = 0
+    let ballbesitz = randomBool(); // Wer hat Anstoß?
+
+    for (let i = 0; i < 90 * 10; i++) { // 90 Minuten, 10 Ballaktionen pro Minute
+        if (ballposition === HEIMDRITTEL) {
+            const random = randomInt(0, heimVerteidigung + gastAngriff);
+            if (ballbesitz === HEIM) {
+                if (random < (heimVerteidigung / 2)) {
+                    ballposition = MITTELFELD;
+                } else if (random > heimVerteidigung) {
+                    ballbesitz = GAST;
+                }
+            } else {
+                if (random > (heimVerteidigung + (gastAngriff / 2))) {
+                    const angreiferStaerke = randomBool() ?
+                        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.LA].spielstaerke.angriff :
+                        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.RA].spielstaerke.angriff;
+                    const torschuss = randomInt(0, angreiferStaerke + heimTor);
+                    if (torschuss < (angreiferStaerke / 2)) {
+                        gasttore++;
+                        ballposition = MITTELFELD;
+                    } else if (torschuss > angreiferStaerke) {
+                        ballbesitz = HEIM;
+                    }
+                } else if (random < heimVerteidigung) {
+                    ballbesitz = HEIM;
+                }
+            }
+        } else if (ballposition === MITTELFELD) {
+            const random = randomInt(0, heimMittelfeld + gastMittelfeld);
+            if (ballbesitz === HEIM) {
+                if (random < (heimMittelfeld / 2)) {
+                    ballposition = GASTDRITTEL;
+                } else if (random > heimMittelfeld) {
+                    ballbesitz = GAST;
+                }
+            } else {
+                if (random > (gastMittelfeld + (heimMittelfeld / 2))) {
+                    ballposition = HEIMDRITTEL;
+                } else if (random < heimMittelfeld) {
+                    ballbesitz = HEIM;
+                }
+            }
+        } else if (ballposition === GASTDRITTEL) {
+            const random = randomInt(0, gastVerteidigung + heimAngriff);
+            
+            if (ballbesitz === GAST) {
+                if (random < (gastVerteidigung / 2)) {
+                    ballposition = MITTELFELD;
+                } else if (random > gastVerteidigung) {
+                    ballbesitz = HEIM;
+                }
+            } else {
+                if (random > (gastVerteidigung + (heimAngriff / 2))) {
+                    const angreiferStaerke = randomBool() ?
+                        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.LA].spielstaerke.angriff :
+                        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.RA].spielstaerke.angriff;
+                    const torschuss = randomInt(0, angreiferStaerke + gastTor);
+                    if (torschuss < (angreiferStaerke / 2)) {
+                        heimtore++;
+                        ballposition = MITTELFELD;
+                    } else if (torschuss > angreiferStaerke) {
+                        ballbesitz = GAST;
+                    }
+                } else if (random < gastVerteidigung) {
+                    ballbesitz = GAST;
+                }
+            }
+        }
+    }
+
+    return [heimtore, gasttore]
+}
+
+function spielSpielen_test3(heimindex, gastindex) {
+    const HEIM = true
+    const GAST = false
+    const HEIMDRITTEL = 0;
+    const MITTELFELD = 1;
+    const GASTDRITTEL = 2;
+    const OFFENSIVE_GRENZE = 0.25; // < 1.0
+    const DEFENSIVE_GRENZE = 0.75; // < 1.0
+
+    const heimmannschaft = data.mannschaften[heimindex]
+    const gastmannschaft = data.mannschaften[gastindex]
+
+    const heimAngriff =
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.LA].spielstaerke.angriff +
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.RA].spielstaerke.angriff;
+    const heimMittelfeld =
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.LM].spielstaerke.mittelfeld +
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.LZM].spielstaerke.mittelfeld +
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.RZM].spielstaerke.mittelfeld +
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.RM].spielstaerke.mittelfeld;
+    const heimVerteidigung =
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.LV].spielstaerke.verteidigung +
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.LIV].spielstaerke.verteidigung +
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.RIV].spielstaerke.verteidigung +
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.RV].spielstaerke.verteidigung;
+    const heimTor =
+        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.TW].spielstaerke.tor;
+
+    const gastAngriff =
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.LA].spielstaerke.angriff +
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.RA].spielstaerke.angriff;
+    const gastMittelfeld =
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.LM].spielstaerke.mittelfeld +
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.LZM].spielstaerke.mittelfeld +
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.RZM].spielstaerke.mittelfeld +
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.RM].spielstaerke.mittelfeld;
+    const gastVerteidigung =
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.LV].spielstaerke.verteidigung +
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.LIV].spielstaerke.verteidigung +
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.RIV].spielstaerke.verteidigung +
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.RV].spielstaerke.verteidigung;
+    const gastTor =
+        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.TW].spielstaerke.tor;
+
+    // Team ermitteln, das Anstoß hat
+    // 10 Ballaktionen pro Minute simulieren
+    // nach Anpfiff beginnt es im Mittelfeld
+
+    // Ball im Heimdrittel
+    // - vergleiche heimVerteidigung mit gastAngriff
+    // - verwende einen kleinen Zufallsfaktor
+    //     const random = randomInt(0, heimVerteidigung + gastAngriff);
+    //     const sieger = random < heimVerteidigung ? "Heim" : "Gast";
+    // - wenn die ballführende Mannschaft deutlicher Sieger ist, und ...
+    //     - die Heimmannschaft den Ball hat, dann wird der Ball ins Mittelfeld gespielt
+    //     - die Gastmannschaft den Ball hat, dann erfolgt ein Torabschluss
+    //         - ein Angreifer der Gastmannschaft wird zufällig ausgewählt (LA oder RA)
+    //         - er geht ins 1:1 gegen den Torwart der Heimmannschaft (selbes Stärke+Zufall-Prinzip wie oben)
+    //             - wenn der Angreifer deutlicher Sieger ist, schießt er ein Tor, die Gastmannschaft bekommt ein Tor, die Heimmannschaft den Ball im Mittelfeld
+    //             - wenn der Angreifer deutlicher Verlierer ist, hält der Torwart den Ball fest, der Ballbesitz wechselt, die Ballposition ist aber noch das Heimdrittel
+    //             - ansonsten wehrt der Torwart den Schuss ab, die Gastmannschaft bleibt aber im Ballbesitz
+    // - wenn die ballführende Mannschaft deutlicher Verlierer ist, dann wechselt der Ballbesitz, bleibt aber im aktuellen Spielfelddrittel
+    // - ansonsten bleibt sie im aktuellen Spielfelddrittel in Ballbesitz
+
+    // Ball im Mittelfeld
+    // - vergleiche heimMittelfeld mit gastMittelfeld
+    // - verwende einen kleinen Zufallsfaktor
+    //     const random = randomInt(0, heimstaerke + gaststaerke);
+    //     const sieger = random < heimstaerke ? "Heim" : "Gast";
+    // - wenn die ballführende Mannschaft deutlicher Sieger ist, dann wird der Ball ins nächste Spielfelddrittel gespielt
+    // - wenn die ballführende Mannschaft deutlicher Verlierer ist, dann wechselt der Ballbesitz, bleibt aber im aktuellen Spielfelddrittel
+    // - ansonsten bleibt sie im aktuellen Spielfelddrittel in Ballbesitz
+
+    // Ball im Gastdrittel
+    // - wie "Ball im Heimdrittel", nur umgekehrt
+
+    // Initialisierung
+    let ballposition = MITTELFELD;
+    let heimtore = 0
+    let gasttore = 0
+    let ballbesitz = randomBool(); // Wer hat Anstoß?
+
+    for (let i = 0; i < 2; i++) { // zwei Halbzeiten
+        ballbesitz = !ballbesitz; // jeder hat einmal Anstoß
+        for (let j = 0; j < 45 * 10; j++) { // je 45 Minuten, je zehn Ballaktionen pro Minute
+            if (ballposition === HEIMDRITTEL) {
+                const random = randomInt(0, heimVerteidigung + gastAngriff);
+                if (ballbesitz === HEIM) {
+                    if (random < heimVerteidigung * OFFENSIVE_GRENZE) {
+                        // |--Heimverteidigung---||--Gastangriff--------|
+                        // |oooooooooo|----------||----------|----------|          random liegt im ersten Viertel
+                        // Heimmannschaft im eigenen Drittel in Ballbesitz, Pass nach Vorne
+                        // Ballbesitz bleibt, Ballposition verschiebt ins Mittelfeld
+                        ballposition = MITTELFELD;
+                    } else if (random < heimVerteidigung) {
+                        // |--Heimverteidigung---||--Gastangriff--------|
+                        // |----------|oooooooooo||----------|----------|          random liegt im zweiten Viertel
+                        // Heimmannschaft im eigenen Drittel in Ballbesitz, Querpass
+                        // Ballbesitz bleibt, Ballposition bleibt
+                    } else if (random < heimVerteidigung + gastAngriff * DEFENSIVE_GRENZE) {
+                        // |--Heimverteidigung---||--Gastangriff--------|
+                        // |----------|----------||oooooooooo|----------|          random liegt im dritten Viertel
+                        // Heimmannschaft im eigenen Drittel in Ballbesitz, Querpass
+                        // Ballbesitz bleibt, Ballposition bleibt
+                    } else {
+                        // |--Heimverteidigung---||--Gastangriff--------|
+                        // |----------|----------||----------|oooooooooo|          random liegt im vierten Viertel
+                        // Heimmannschaft verliert den Ball im eigenen Drittel
+                        // Ballbesitz wechselt, Ballposition bleibt
+                        ballbesitz = GAST;
+                    }
+                } else if (ballbesitz === GAST) {
+                    if (random < gastAngriff * OFFENSIVE_GRENZE) {
+                        // |--Gastangriff--------||--Heimverteidigung---|
+                        // |oooooooooo|----------||----------|----------|          random liegt im ersten Viertel
+                        // Gastmannschaft im gegnerischen Drittel in Ballbesitz, Torschuss
+                        // Ballbesitzt und Ballposition hängen vom Torerfolg ab
+                        const angreiferStaerke = randomBool() ?
+                            gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.LA].spielstaerke.angriff :
+                            gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.RA].spielstaerke.angriff;
+                        const torschuss = randomInt(0, angreiferStaerke + heimTor);
+                        if (torschuss < angreiferStaerke * OFFENSIVE_GRENZE) {
+                            // Gastmannschaft erzielt Tor
+                            // Ballbesitz wechselt, Ballposition verschiebt ins Mittelfeld
+                            gasttore++;
+                            ballposition = MITTELFELD;
+                            ballbesitz = HEIM;
+                        } else if (torschuss < angreiferStaerke) {
+                            // Heimtorwart hält, aber Gastmannschaft erobert den zweiten Ball
+                            // Ballbesitz bleibt, Ballposition bleibt
+                        } else if (torschuss < angreiferStaerke + heimTor * DEFENSIVE_GRENZE) {
+                            // Heimtorwart hält, aber Gastmannschaft erobert den zweiten Ball
+                            // Ballbesitz bleibt, Ballposition bleibt
+                        } else {
+                            // Heimtorwart hält den Ball fest
+                            // Ballbesitz wechselt, Ballposition bleibt
+                            ballbesitz = HEIM;
+                        }
+                    } else if (random < gastAngriff) {
+                        // |--Gastangriff--------||--Heimverteidigung---|
+                        // |----------|oooooooooo||----------|----------|          random liegt im zweiten Viertel
+                        // Gastmannschaft im gegnerischen Drittel in Ballbesitz, Querpass
+                        // Ballbesitz bleibt, Ballposition bleibt
+                    } else if (random < gastAngriff + heimVerteidigung * DEFENSIVE_GRENZE) {
+                        // |--Gastangriff--------||--Heimverteidigung---|
+                        // |----------|----------||oooooooooo|----------|          random liegt im dritten Viertel
+                        // Gastmannschaft im gegnerischen Drittel in Ballbesitz, Querpass
+                        // Ballbesitz bleibt, Ballposition bleibt
+                    } else {
+                        // |--Gastangriff--------||--Heimverteidigung---|
+                        // |----------|----------||----------|oooooooooo|          random liegt im vierten Viertel
+                        // Gastmannschaft verliert den Ball im eigenen Drittel
+                        // Ballbesitz wechselt, Ballposition bleibt
+                        ballbesitz = HEIM;
+                    }
+                }
+            } else if (ballposition === MITTELFELD) {
+                const random = randomInt(0, heimMittelfeld + gastMittelfeld);
+                if (ballbesitz === HEIM) {
+                    if (random < heimMittelfeld * OFFENSIVE_GRENZE) {
+                        // |--Heimmittelfeld-----||--Gastmittelfeld-----|
+                        // |oooooooooo|----------||----------|----------|          random liegt im ersten Viertel
+                        // Heimmannschaft im Mittelfeld in Ballbesitz, Pass nach Vorne
+                        // Ballbesitz bleibt, Ballposition verschiebt ins Gastdrittel
+                        ballposition = GASTDRITTEL;
+                    } else if (random < heimMittelfeld) {
+                        // |--Heimmittelfeld-----||--Gastmittelfeld-----|
+                        // |----------|oooooooooo||----------|----------|          random liegt im zweiten Viertel
+                        // Heimmannschaft im Mittelfeld in Ballbesitz, Querpass
+                        // Ballbesitz bleibt, Ballposition bleibt
+                    } else if (random < heimMittelfeld + gastMittelfeld * DEFENSIVE_GRENZE) {
+                        // |--Heimmittelfeld-----||--Gastmittelfeld-----|
+                        // |----------|----------||oooooooooo|----------|          random liegt im dritten Viertel
+                        // Heimmannschaft im Mittelfeld in Ballbesitz, Querpass
+                        // Ballbesitz bleibt, Ballposition bleibt
+                    } else {
+                        // |--Heimmittelfeld-----||--Gastmittelfeld-----|
+                        // |----------|----------||----------|oooooooooo|          random liegt im vierten Viertel
+                        // Heimmannschaft verliert den Ball im Mittelfeld
+                        // Ballbesitz wechselt, Ballposition bleibt
+                        ballbesitz = GAST;
+                    }
+                } else if (ballbesitz === GAST) {
+                    if (random < gastMittelfeld * OFFENSIVE_GRENZE) {
+                        // |--Gastmittelfeld-----||--Heimmittelfeld-----|
+                        // |oooooooooo|----------||----------|----------|          random liegt im ersten Viertel
+                        // Gastmannschaft im Mittelfeld in Ballbesitz, Pass nach Vorne
+                        // Ballbesitz bleibt, Ballposition verschiebt ins Heimdrittel
+                        ballposition = HEIMDRITTEL;
+                    } else if (random < gastMittelfeld) {
+                        // |--Gastmittelfeld-----||--Heimmittelfeld-----|
+                        // |----------|oooooooooo||----------|----------|          random liegt im zweiten Viertel
+                        // Gastmannschaft im Mittelfeld in Ballbesitz, Querpass
+                        // Ballbesitz bleibt, Ballposition bleibt
+                    } else if (random < gastMittelfeld + heimMittelfeld * DEFENSIVE_GRENZE) {
+                        // |--Gastmittelfeld-----||--Heimmittelfeld-----|
+                        // |----------|----------||oooooooooo|----------|          random liegt im dritten Viertel
+                        // Gastmannschaft im Mittelfeld in Ballbesitz, Querpass
+                        // Ballbesitz bleibt, Ballposition bleibt
+                    } else {
+                        // |--Gastmittelfeld-----||--Heimmittelfeld-----|
+                        // |----------|----------||----------|oooooooooo|          random liegt im vierten Viertel
+                        // Gastmannschaft verliert den Ball im Mittelfeld
+                        // Ballbesitz wechselt, Ballposition bleibt
+                        ballbesitz = HEIM;
+                    }
+                }
+            } else if (ballposition === GASTDRITTEL) {
+                const random = randomInt(0, gastVerteidigung + heimAngriff);
+                if (ballbesitz === HEIM) {
+                    if (random < heimAngriff * OFFENSIVE_GRENZE) {
+                        // |--Heimangriff--------||--Gastverteidigung---|
+                        // |oooooooooo|----------||----------|----------|          random liegt im ersten Viertel
+                        // Heimmannschaft im gegnerischen Drittel in Ballbesitz, Torschuss
+                        // Ballbesitzt und Ballposition hängen vom Torerfolg ab
+                        const angreiferStaerke = randomBool() ?
+                            heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.LA].spielstaerke.angriff :
+                            heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.RA].spielstaerke.angriff;
+                        const torschuss = randomInt(0, angreiferStaerke + gastTor);
+                        if (torschuss < angreiferStaerke * OFFENSIVE_GRENZE) {
+                            // Heimmannschaft erzielt Tor
+                            // Ballbesitz wechselt, Ballposition verschiebt ins Mittelfeld
+                            heimtore++;
+                            ballposition = MITTELFELD;
+                            ballbesitz = GAST;
+                        } else if (torschuss < angreiferStaerke) {
+                            // Gasttorwart hält, aber Heimmannschaft erobert den zweiten Ball
+                            // Ballbesitz bleibt, Ballposition bleibt
+                        } else if (torschuss < angreiferStaerke + gastTor * DEFENSIVE_GRENZE) {
+                            // Gasttorwart hält, aber Heimmannschaft erobert den zweiten Ball
+                            // Ballbesitz bleibt, Ballposition bleibt
+                        } else {
+                            // Gasttorwart hält den Ball fest
+                            // Ballbesitz wechselt, Ballposition bleibt
+                            ballbesitz = GAST;
+                        }
+                    } else if (random < heimAngriff) {
+                        // |--Heimangriff--------||--Gastverteidigung---|
+                        // |----------|oooooooooo||----------|----------|          random liegt im zweiten Viertel
+                        // Heimmannschaft im gegnerischen Drittel in Ballbesitz, Querpass
+                        // Ballbesitz bleibt, Ballposition bleibt
+                    } else if (random < heimAngriff + gastVerteidigung * DEFENSIVE_GRENZE) {
+                        // |--Heimangriff--------||--Gastverteidigung---|
+                        // |----------|----------||oooooooooo|----------|          random liegt im dritten Viertel
+                        // Heimmannschaft im gegnerischen Drittel in Ballbesitz, Querpass
+                        // Ballbesitz bleibt, Ballposition bleibt
+                    } else {
+                        // |--Heimangriff--------||--Gastverteidigung---|
+                        // |----------|----------||----------|oooooooooo|          random liegt im vierten Viertel
+                        // Heimmannschaft verliert den Ball im eigenen Drittel
+                        // Ballbesitz wechselt, Ballposition bleibt
+                        ballbesitz = GAST;
+                    }
+                } else if (ballbesitz === GAST) {
+                    if (random < gastVerteidigung * OFFENSIVE_GRENZE) {
+                        // |--Gastverteidigung---||--Heimangriff--------|
+                        // |oooooooooo|----------||----------|----------|          random liegt im ersten Viertel
+                        // Gastmannschaft im eigenen Drittel in Ballbesitz, Pass nach Vorne
+                        // Ballbesitz bleibt, Ballposition verschiebt ins Mittelfeld
+                        ballposition = MITTELFELD;
+                    } else if (random < gastVerteidigung) {
+                        // |--Gastverteidigung---||--Heimangriff--------|
+                        // |----------|oooooooooo||----------|----------|          random liegt im zweiten Viertel
+                        // Gastmannschaft im eigenen Drittel in Ballbesitz, Querpass
+                        // Ballbesitz bleibt, Ballposition bleibt
+                    } else if (random < gastVerteidigung + heimAngriff * DEFENSIVE_GRENZE) {
+                        // |--Gastverteidigung---||--Heimangriff--------|
+                        // |----------|----------||oooooooooo|----------|          random liegt im dritten Viertel
+                        // Gastmannschaft im eigenen Drittel in Ballbesitz, Querpass
+                        // Ballbesitz bleibt, Ballposition bleibt
+                    } else {
+                        // |--Gastverteidigung---||--Heimangriff--------|
+                        // |----------|----------||----------|oooooooooo|          random liegt im vierten Viertel
+                        // Gastmannschaft verliert den Ball im eigenen Drittel
+                        // Ballbesitz wechselt, Ballposition bleibt
+                        ballbesitz = HEIM;
+                    }
+                }
+            }
+        }
+    }
 
     return [heimtore, gasttore]
 }
