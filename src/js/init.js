@@ -2,6 +2,7 @@ import { randomDate, randomInt, randomBool, shuffle, formatDatum } from './utils
 import { data, aktuelleSaison, istSpieltag, getSpieltagIndex, getLetztenSpieltagIndex } from './data.js';
 import { show as showUebersicht } from './spieltag/uebersicht.js';
 import { show as showAufstellung } from './spieltag/aufstellung.js';
+import { show as showLetztesSpiel } from './spieltag/letztesSpiel.js';
 
 export async function init() {
     document.querySelector('div.rechte-seite #managername').textContent = data.manager.name;
@@ -444,6 +445,10 @@ function spieleSpieltag() {
         const [heimtore, gasttore] = spielSpielen(spieltagspaarungen[spielIndex].heim, spieltagspaarungen[spielIndex].gast)
         spiel.toreHeim = heimtore;
         spiel.toreGast = gasttore;
+
+        if (spiel.heim === data.manager.mannschaft || spiel.gast === data.manager.mannschaft) {
+            data.letztesSpiel = spiel;
+        }
     }
 
     document.querySelector('#naechsterTag').style.display = 'block';
@@ -451,7 +456,7 @@ function spieleSpieltag() {
 
     data.aktuellerSpieltag = getLetztenSpieltagIndex(data.aktuellesDatum);
     
-    showUebersicht();
+    showLetztesSpiel();
 }
 
 function naechsterTag() {

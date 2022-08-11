@@ -25,7 +25,10 @@
 [x] füge die Rückrunde hinzu
 [x] füge einen "nächster Tag" Button ein
         [x] wenn ein Spiel ansteht, werte es aus
-        [o] zeige eine Seite mit dem Spielergebnis an
+        [x] zeige eine Seite mit dem Spielergebnis an
+                [x] Kurzanalyse
+                [ ] Statistik
+                [ ] Vorschau
 [ ] erstelle eine Spielstatistik, das ist einfach jede Ballaktion als kleiner Text
 
 ----- interne Logik

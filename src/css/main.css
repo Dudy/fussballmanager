@@ -1,15 +1,6 @@
 @import "navigation.css";
 @import "spieltag.css";
-
-:root {
-    --very-dark: #03045e;
-    --dark: #0077b6;
-    --normal: #00b4d8;
-    --light: #90e0ef;
-    --very-light: #caf0f8;
-
-    --textcolor: #000000;
-}
+@import "colors.css";
 
 html {
     font-family: Tahoma, Verdana, sans-serif;

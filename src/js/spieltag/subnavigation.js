@@ -1,5 +1,6 @@
 import { show as zeigeUebersicht } from './uebersicht.js';
 import { show as zeigeAufstellung } from './aufstellung.js';
+import { show as zeigeLetztesSpiel } from './letztesSpiel.js';
 
 export function init(activeElement) {
     const subnavigationElement = document.querySelector('#subnavigationTemplate').content.cloneNode(true);
@@ -10,4 +11,5 @@ export function init(activeElement) {
     document.querySelector('#subnavigation').replaceChildren(subnavigationElement);
     document.querySelector('a[data-id="uebersicht"]').addEventListener('click', zeigeUebersicht);
     document.querySelector('a[data-id="aufstellung"]').addEventListener('click', zeigeAufstellung);
+    document.querySelector('a[data-id="letztesSpiel"]').addEventListener('click', zeigeLetztesSpiel);
 }

@@ -1,5 +1,6 @@
-import { show as showUebersicht} from './spieltag/uebersicht.js';
+//import { show } from './spieltag/uebersicht.js';
+import { show } from './spieltag/letztesSpiel.js';
 import { init } from './init.js';
 
 await init();
-showUebersicht();
+show();

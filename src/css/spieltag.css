@@ -1,3 +1,5 @@
+@import "colors.css";
+
 /* ----- Übersicht ----- */
 .left-aligned-children cell {
     text-align: left;
@@ -147,4 +149,71 @@ cell {
 }
 .startelf .header column cell {
     width: auto;
+}
+
+
+
+
+
+
+/* ----- letztes Spiel ----- */
+.letztesSpiel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.kurzanalyse {
+    display: flex;
+    flex-direction: column;
+    border-bottom: solid 1px var(--light);
+    margin-bottom: 1rem;
+}
+
+.spielergebnis {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.spielergebnis .heim {
+    width: 40%;
+    flex-grow: 1;
+}
+.spielergebnis .ergebnis {
+    width: 20%;
+    flex-grow: 2;
+}
+.spielergebnis .gast {
+    width: 40%;
+    flex-grow: 1;
+}
+
+.spielergebnis .heim,
+.spielergebnis .ergebnis,
+.spielergebnis .gast {
+    text-align: center;
+}
+
+.spielverlauf {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+
+
+
+
+.statistik {
+    display: flex;
+    flex-direction: column;
+    border-bottom: solid 1px var(--light);
+    margin-bottom: 1rem;
+}
+
+.vorschau {
+    display: flex;
+    flex-direction: column;
+    border-bottom: solid 1px var(--light);
+    margin-bottom: 1rem;
 }
