@@ -1,5 +1,5 @@
-import { data } from '../js/data.js';
-import { createCell, formatDatum } from '../js/utils.js';
+import { data, istSpieltag, getSpieltagIndex } from '../data.js';
+import { createCell, formatDatum } from '../utils.js';
 import { init as initSubnavigation } from './subnavigation.js';
 
 export function show() {
@@ -18,27 +18,31 @@ function addEventHandler() {
 }
 
 function addSpieltagToTabelle(tabelle, spieltag) {
+    const spieltagIndex = getSpieltagIndex(spieltag.spiele[0].datum);
     for (const id of Object.keys(spieltag.spiele)) {
         const spiel = spieltag.spiele[id];
 
         const mannschaftHeim = tabelle.mannschaften[spiel.heim];
         mannschaftHeim.spiele += 1;
-        mannschaftHeim.tore += spiel.toreHeim;
-        mannschaftHeim.gegentore += spiel.toreGast;
-        if (spiel.toreHeim > spiel.toreGast) {
-            mannschaftHeim.punkte += 3;
-        } else if (spiel.toreHeim === spiel.toreGast) {
-            mannschaftHeim.punkte += 1;
-        }
-
         const mannschaftGast = tabelle.mannschaften[spiel.gast];
         mannschaftGast.spiele += 1;
-        mannschaftGast.tore += spiel.toreGast;
-        mannschaftGast.gegentore += spiel.toreHeim;
-        if (spiel.toreGast > spiel.toreHeim) {
-            mannschaftGast.punkte += 3;
-        } else if (spiel.toreGast === spiel.toreHeim) {
-            mannschaftGast.punkte += 1;
+
+        if (spieltagIndex <= data.aktuellerSpieltag && spiel.toreHeim >= 0) {
+            mannschaftHeim.tore += spiel.toreHeim;
+            mannschaftHeim.gegentore += spiel.toreGast;
+            if (spiel.toreHeim > spiel.toreGast) {
+                mannschaftHeim.punkte += 3;
+            } else if (spiel.toreHeim === spiel.toreGast) {
+                mannschaftHeim.punkte += 1;
+            }
+        
+            mannschaftGast.tore += spiel.toreGast;
+            mannschaftGast.gegentore += spiel.toreHeim;
+            if (spiel.toreGast > spiel.toreHeim) {
+                mannschaftGast.punkte += 3;
+            } else if (spiel.toreGast === spiel.toreHeim) {
+                mannschaftGast.punkte += 1;
+            }
         }
     }
 }
@@ -92,7 +96,7 @@ export function fillTabelle(node = document.querySelector('#inhalt')) {
     let punkteDaten;
   
     // Daten ermitteln als ...
-    if (data.aktuellerSpieltag === -1) {
+    if (data.aktuellerSpieltag === 0 && spieltage[0].spiele[0].toreHeim === -1) {
         // ... Initialbefüllung, wenn vor dem ersten Spieltag
         nameDaten = Array.from(tabelle.mannschaften, (mannschaft) => createCell(data.mannschaften[mannschaft.id].name));
         spieleDaten = Array.from({ length: tabelle.mannschaften.length }, () => createCell('0'));
@@ -155,7 +159,7 @@ export function fillSpieltag(node = document.querySelector('#inhalt')) {
     let ergebnisDaten;
     let gastDaten;
     let spiele;
-  
+
     // Daten ermitteln aus ...
     if (data.aktuellerSpieltag === -1) {
         // ... den Spielen des ersten Spieltags, aber ohne die Ergebnisse
@@ -167,7 +171,15 @@ export function fillSpieltag(node = document.querySelector('#inhalt')) {
     } else {
         // ... den Spielen des gewählten Spieltags
         spiele = Object.values(spieltage[data.aktuellerSpieltag].spiele);
-        ergebnisDaten = Array.from(spiele, spiel => createCell(spiel.toreHeim + ':' + spiel.toreGast));
+        
+        ergebnisDaten = Array.from(spiele, spiel => {
+            if (spiel.toreHeim === -1) {
+                return createCell('---')
+            } else {
+                return createCell(spiel.toreHeim + ':' + spiel.toreGast);
+            }
+        })
+        
         datumDaten = Array.from(spiele, spiel => createCell(formatDatum(spiel.datum)));
         heimDaten = Array.from(spiele, spiel => createCell(data.mannschaften[spiel.heim].name));
         gastDaten = Array.from(spiele, spiel => createCell(data.mannschaften[spiel.gast].name));
@@ -195,7 +207,7 @@ export function fillSpieltag(node = document.querySelector('#inhalt')) {
 }
 
 function vorigerSpieltag() {
-    if (data.aktuellerSpieltag > -1) {
+    if (data.aktuellerSpieltag > 0) {
         data.aktuellerSpieltag -= 1;
         fillTabelle();
         fillSpieltag();

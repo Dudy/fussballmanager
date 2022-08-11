@@ -1,6 +1,6 @@
-import { data } from '../js/data.js';
+import { data } from '../data.js';
 import { init as initSubnavigation } from './subnavigation.js';
-import { createCell, padWithZero } from '../js/utils.js';
+import { createCell, padWithZero } from '../utils.js';
 
 const RUECKENNUMMER_ID_PREFIX = 'rueckennummer-';
 

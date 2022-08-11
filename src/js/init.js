@@ -1,9 +1,22 @@
-import { randomDate, randomInt, randomBool, shuffle } from './utils.js';
-import { data } from './data.js';
+import { randomDate, randomInt, randomBool, shuffle, formatDatum } from './utils.js';
+import { data, aktuelleSaison, istSpieltag, getSpieltagIndex, getLetztenSpieltagIndex } from './data.js';
+import { show as showUebersicht } from './spieltag/uebersicht.js';
+import { show as showAufstellung } from './spieltag/aufstellung.js';
 
 export async function init() {
-    document.querySelector('div.managername p').textContent = data.manager.name
+    document.querySelector('div.rechte-seite #managername').textContent = data.manager.name;
+    document.querySelector('div.rechte-seite #aktuellesdatum').textContent = formatDatum(data.aktuellesDatum);
+    document.querySelector('#naechsterTag').addEventListener('click', naechsterTag);
+    document.querySelector('#spieleSpieltag').addEventListener('click', spieleSpieltag);
 
+    await initData();
+
+    fuegeSpielerZuMannschaftenHinzu();
+    erstelleStartelfs();
+    erzeugeSaisons();
+}
+
+async function initData() {
     data.mannschaften = await (
         await fetch("http://localhost:8080/js/mannschaften.json")
     ).json();
@@ -12,16 +25,9 @@ export async function init() {
     ).json();
     data.anzahlMannschaften = Object.keys(data.mannschaften).length;
     data.anzahlSpieltage = (data.anzahlMannschaften - 1) * 2;
-    data.aktuelleSaison = 2022;
-    data.aktuellerSpieltag = -1;
     data.namen = await (
         await fetch("http://localhost:8080/js/namen.json")
     ).json();
-    data.saisons = [];
-
-    fuegeSpielerZuMannschaftenHinzu();
-    erstelleStartelfs();
-    erzeugeSaisons();
 }
 
 function erzeugeSpieler(rueckennummer, startDate, endDate, istTorwart) {
@@ -120,9 +126,7 @@ function erzeugeSaisons() {
         }
     };
 
-    const saisonIndex = 2022;
-    const saison = data.saisons[saisonIndex];
-
+    const saison = aktuelleSaison();
     let datum = saison.startdatum;
 
     for (let spieltagIndex = 0; spieltagIndex < data.anzahlSpieltage; spieltagIndex++) {
@@ -133,13 +137,12 @@ function erzeugeSaisons() {
 
         const spieltagspaarungen = data.spieltage[spieltagIndex];
         for (let spielIndex = 0; spielIndex < spieltagspaarungen.length; spielIndex++) {
-            const [heimtore, gasttore] = spielSpielen(spieltagspaarungen[spielIndex].heim, spieltagspaarungen[spielIndex].gast)
             spieltag.spiele[spielIndex] = {
-                datum: datum.toISOString(),
+                datum: new Date(datum),
                 heim: spieltagspaarungen[spielIndex].heim,
                 gast: spieltagspaarungen[spielIndex].gast,
-                toreHeim: heimtore,
-                toreGast: gasttore
+                toreHeim: -1,
+                toreGast: -1
             };
         }
 
@@ -148,228 +151,13 @@ function erzeugeSaisons() {
 }
 
 function spielSpielen(heimindex, gastindex) {
-    return spielSpielen_test3(heimindex, gastindex)
-}
-
-// im folgenden probier ich ein paar Sachen aus
-function spielSpielen_test1(heimindex, gastindex) {
-    const HEIM = true
-    const GAST = false
-
-    const heimmannschaft = data.mannschaften[heimindex]
-    const gastmannschaft = data.mannschaften[gastindex]
-
-    // Team ermitteln, das Anstoß hat
-    // 10 Ballaktionen pro Minute simulieren
-    // nach Anpfiff beginnt es im Mittelfeld
-    // Ballaktion: ein Spieler hat den Ball, er kann
-    //   - nach Vorne laufen bzw. Dribbeln
-    //   - nach Hinten laufen
-    //   - nach Vorne spielen
-    //   - nach Hinten spielen
-    //   - Querpass
-    //   - Schiessen
-    // Spiel ohne Ball:
-    //   - nach Vorne laufen
-    //   - nach Hinten laufen
-    //
-    // Das Spielfeld wird grob in Fünftel aufgeteilt.
-    //    - Der gegnerische Strafraum ist das Fünftel 0.
-    //    - Die Mitte der gegnerischen Hälfte ist das Fünftel 1.
-    //    - Der Bereich des Mittelkreises ist das Fünftel 2.
-    //    - Die Mitte der eigenen Hälfte ist das Fünftel 3.
-    //    - Der eigene Strafraum ist das Fünftel 4.
-
-
-
-
-
-    // Wer hat Anstoß? Den Ball hat initial der linke zentrale Mittelfeldspieler (LZM).
-    let ballbesitz = randomBool() ? heimmannschaft.startelf.LZM : gastmannschaft.startelf.LZM;
-    let heimtore = 0
-    let gasttore = 0
-
-    // initialisiere Positionen der Spieler (grobe Einteilung des Feldes in Fünftel
-
-    for (let i = 0; i < 90 * 10; i++) { // 90 Minuten, 10 Ballaktionen pro Minute
-        // berechne für den ballführenden Spieler (Werte nach Position, also im Fünftel)
-        //    - (00%, 10%, 20%, 30%, 40%) nach Vorne laufen
-        //    - (10%, 10%, 05%, 05%, 00%) nach Hinten laufen
-        //    - (00%, 10%, 20%, 30%, 40%) nach Vorne spielen
-        //    - (10%, 10%, 05%, 05%, 00%) nach Hinten spielen
-        //    - (20%, 20%, 25%, 20%, 20%) Querpass
-        //    - (60%, 40%, 05%, 00%, 00%) Schiessen
-        //    TODO: jeder Mannschaftsteil sollte seine eigenen Werte haben (Angriff, Mittelfeld, Verteidigung, Torwart)
-        //          der Angreifer wird eher schiessen, der Torwart spielt nie zurück, ...
-        // 
-        // berechne für die anderen Spieler der Mannschaft in Ballbesitz
-        // berechne für alle Spieler der anderen Mannschaft
-    }
-
-    console.log(heimmannschaft);
-
-    return [heimtore, gasttore]
-}
-
-function spielSpielen_test2(heimindex, gastindex) {
     const HEIM = true
     const GAST = false
     const HEIMDRITTEL = 0;
     const MITTELFELD = 1;
     const GASTDRITTEL = 2;
-
-    const heimmannschaft = data.mannschaften[heimindex]
-    const gastmannschaft = data.mannschaften[gastindex]
-
-    const heimAngriff =
-        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.LA].spielstaerke.angriff +
-        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.RA].spielstaerke.angriff;
-    const heimMittelfeld =
-        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.LM].spielstaerke.mittelfeld +
-        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.LZM].spielstaerke.mittelfeld +
-        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.RZM].spielstaerke.mittelfeld +
-        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.RM].spielstaerke.mittelfeld;
-    const heimVerteidigung =
-        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.LV].spielstaerke.verteidigung +
-        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.LIV].spielstaerke.verteidigung +
-        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.RIV].spielstaerke.verteidigung +
-        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.RV].spielstaerke.verteidigung;
-    const heimTor =
-        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.TW].spielstaerke.tor;
-
-    const gastAngriff =
-        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.LA].spielstaerke.angriff +
-        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.RA].spielstaerke.angriff;
-    const gastMittelfeld =
-        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.LM].spielstaerke.mittelfeld +
-        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.LZM].spielstaerke.mittelfeld +
-        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.RZM].spielstaerke.mittelfeld +
-        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.RM].spielstaerke.mittelfeld;
-    const gastVerteidigung =
-        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.LV].spielstaerke.verteidigung +
-        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.LIV].spielstaerke.verteidigung +
-        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.RIV].spielstaerke.verteidigung +
-        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.RV].spielstaerke.verteidigung;
-    const gastTor =
-        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.TW].spielstaerke.tor;
-
-    // Team ermitteln, das Anstoß hat
-    // 10 Ballaktionen pro Minute simulieren
-    // nach Anpfiff beginnt es im Mittelfeld
-
-    // Ball im Heimdrittel
-    // - vergleiche heimVerteidigung mit gastAngriff
-    // - verwende einen kleinen Zufallsfaktor
-    //     const random = randomInt(0, heimVerteidigung + gastAngriff);
-    //     const sieger = random < heimVerteidigung ? "Heim" : "Gast";
-    // - wenn die ballführende Mannschaft 75% - 100% Sieger ist, und ...
-    //     - die Heimmannschaft den Ball hat, dann wird der Ball ins Mittelfeld gespielt
-    //     - die Gastmannschaft den Ball hat, dann erfolgt ein Torabschluss
-    //         - ein Angreifer der Gastmannschaft wird zufällig ausgewählt (LA oder RA)
-    //         - er geht ins 1:1 gegen den Torwart der Heimmannschaft (selbes Stärke+Zufall-Prinzip wie oben)
-    //             - wenn der Angreifer 75% - 100% Sieger ist, schießt er ein Tor, die Gastmannschaft bekommt ein Tor, die Heimmannschaft den Ball im Mittelfeld
-    //             - wenn der Angreifer 50% - 75% Sieger ist, wehrt der Torwart den Schuss ab, die Gastmannschaft bleibt aber im Ballbesitz
-    //             - wenn der Angreifer 0% - 50% Verlierer ist, hält der Torwart den Ball fest, der Ballbesitz wechselt, die Ballposition ist aber noch das Heimdrittel
-    // - wenn die ballführende Mannschaft 50% - 75% Sieger ist, dann bleibt sie im aktuellen Spielfelddrittel in Ballbesitz
-    // - wenn die ballführende Mannschaft Verlierer ist, dann wechselt der Ballbesitz, bleibt aber im aktuellen Spielfelddrittel
-
-    // Ball im Mittelfeld
-    // - vergleiche heimMittelfeld mit gastMittelfeld
-    // - verwende einen kleinen Zufallsfaktor
-    //     const random = randomInt(0, heimstaerke + gaststaerke);
-    //     const sieger = random < heimstaerke ? "Heim" : "Gast";
-    // - wenn die ballführende Mannschaft 75% - 100% Sieger ist, dann wird der Ball ins nächste Spielfelddrittel gespielt
-    // - wenn die ballführende Mannschaft 50% - 75% Sieger ist, dann bleibt sie im aktuellen Spielfelddrittel in Ballbesitz
-    // - wenn die ballführende Mannschaft Verlierer ist, dann wechselt der Ballbesitz, bleibt aber im aktuellen Spielfelddrittel
-
-    // Ball im Gastdrittel
-    // - wie "Ball im Heimdrittel", nur umgekehrt
-
-    // Initialisierung
-    let ballposition = MITTELFELD;
-    let heimtore = 0
-    let gasttore = 0
-    let ballbesitz = randomBool(); // Wer hat Anstoß?
-
-    for (let i = 0; i < 90 * 10; i++) { // 90 Minuten, 10 Ballaktionen pro Minute
-        if (ballposition === HEIMDRITTEL) {
-            const random = randomInt(0, heimVerteidigung + gastAngriff);
-            if (ballbesitz === HEIM) {
-                if (random < (heimVerteidigung / 2)) {
-                    ballposition = MITTELFELD;
-                } else if (random > heimVerteidigung) {
-                    ballbesitz = GAST;
-                }
-            } else {
-                if (random > (heimVerteidigung + (gastAngriff / 2))) {
-                    const angreiferStaerke = randomBool() ?
-                        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.LA].spielstaerke.angriff :
-                        gastmannschaft.spielerNachRueckennummer[gastmannschaft.startelf.RA].spielstaerke.angriff;
-                    const torschuss = randomInt(0, angreiferStaerke + heimTor);
-                    if (torschuss < (angreiferStaerke / 2)) {
-                        gasttore++;
-                        ballposition = MITTELFELD;
-                    } else if (torschuss > angreiferStaerke) {
-                        ballbesitz = HEIM;
-                    }
-                } else if (random < heimVerteidigung) {
-                    ballbesitz = HEIM;
-                }
-            }
-        } else if (ballposition === MITTELFELD) {
-            const random = randomInt(0, heimMittelfeld + gastMittelfeld);
-            if (ballbesitz === HEIM) {
-                if (random < (heimMittelfeld / 2)) {
-                    ballposition = GASTDRITTEL;
-                } else if (random > heimMittelfeld) {
-                    ballbesitz = GAST;
-                }
-            } else {
-                if (random > (gastMittelfeld + (heimMittelfeld / 2))) {
-                    ballposition = HEIMDRITTEL;
-                } else if (random < heimMittelfeld) {
-                    ballbesitz = HEIM;
-                }
-            }
-        } else if (ballposition === GASTDRITTEL) {
-            const random = randomInt(0, gastVerteidigung + heimAngriff);
-            
-            if (ballbesitz === GAST) {
-                if (random < (gastVerteidigung / 2)) {
-                    ballposition = MITTELFELD;
-                } else if (random > gastVerteidigung) {
-                    ballbesitz = HEIM;
-                }
-            } else {
-                if (random > (gastVerteidigung + (heimAngriff / 2))) {
-                    const angreiferStaerke = randomBool() ?
-                        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.LA].spielstaerke.angriff :
-                        heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.RA].spielstaerke.angriff;
-                    const torschuss = randomInt(0, angreiferStaerke + gastTor);
-                    if (torschuss < (angreiferStaerke / 2)) {
-                        heimtore++;
-                        ballposition = MITTELFELD;
-                    } else if (torschuss > angreiferStaerke) {
-                        ballbesitz = GAST;
-                    }
-                } else if (random < gastVerteidigung) {
-                    ballbesitz = GAST;
-                }
-            }
-        }
-    }
-
-    return [heimtore, gasttore]
-}
-
-function spielSpielen_test3(heimindex, gastindex) {
-    const HEIM = true
-    const GAST = false
-    const HEIMDRITTEL = 0;
-    const MITTELFELD = 1;
-    const GASTDRITTEL = 2;
-    const OFFENSIVE_GRENZE = 0.25; // < 1.0
-    const DEFENSIVE_GRENZE = 0.75; // < 1.0
+    const OFFENSIVE_GRENZE = 0.25; // muss < 1.0 sein
+    const DEFENSIVE_GRENZE = 0.75; // muss < 1.0 sein
 
     const heimmannschaft = data.mannschaften[heimindex]
     const gastmannschaft = data.mannschaften[gastindex]
@@ -645,4 +433,35 @@ function spielSpielen_test3(heimindex, gastindex) {
     }
 
     return [heimtore, gasttore]
+}
+
+function spieleSpieltag() {
+    const saison = aktuelleSaison();
+    const spieltagIndex = getSpieltagIndex(data.aktuellesDatum);
+    const spieltagspaarungen = data.spieltage[spieltagIndex];
+    
+    for (const [spielIndex, spiel] of Object.entries(saison.spieltage[spieltagIndex].spiele)) {
+        const [heimtore, gasttore] = spielSpielen(spieltagspaarungen[spielIndex].heim, spieltagspaarungen[spielIndex].gast)
+        spiel.toreHeim = heimtore;
+        spiel.toreGast = gasttore;
+    }
+
+    document.querySelector('#naechsterTag').style.display = 'block';
+    document.querySelector('#spieleSpieltag').style.display = 'none';
+
+    data.aktuellerSpieltag = getLetztenSpieltagIndex(data.aktuellesDatum);
+    
+    showUebersicht();
+}
+
+function naechsterTag() {
+    data.aktuellesDatum.setDate(data.aktuellesDatum.getDate() + 1);
+    document.querySelector('div.rechte-seite #aktuellesdatum').textContent = formatDatum(data.aktuellesDatum);
+    if (istSpieltag(data.aktuellesDatum)) {
+        showAufstellung();
+        document.querySelector('#naechsterTag').style.display = 'none';
+        document.querySelector('#spieleSpieltag').style.display = 'block';
+    } else {
+        showUebersicht();
+    }
 }
