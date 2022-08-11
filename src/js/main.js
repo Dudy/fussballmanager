@@ -237,6 +237,7 @@ function spielSpielen(heimindex, gastindex) {
     for (let i = 0; i < 2; i++) { // zwei Halbzeiten
         ballbesitz = !ballbesitz; // jeder hat einmal Anstoß
         for (let j = 0; j < 45 * 10; j++) { // je 45 Minuten, je zehn Ballaktionen pro Minute
+            const minute = Math.floor(i * 45 + (j + 1) / 10);
             if (ballposition === HEIMDRITTEL) {
                 const random = randomInt(0, heimVerteidigung + gastAngriff);
                 if (ballbesitz === HEIM) {
@@ -247,7 +248,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz bleibt, Ballposition verschiebt ins Mittelfeld
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: ballbesitz,
                             ballpositionVorher: ballposition,
@@ -263,7 +264,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz bleibt, Ballposition bleibt
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: ballbesitz,
                             ballpositionVorher: ballposition,
@@ -278,7 +279,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz bleibt, Ballposition bleibt
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: ballbesitz,
                             ballpositionVorher: ballposition,
@@ -293,7 +294,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz wechselt, Ballposition bleibt
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: GAST,
                             ballpositionVorher: ballposition,
@@ -318,7 +319,7 @@ function spielSpielen(heimindex, gastindex) {
                             // Ballbesitz wechselt, Ballposition verschiebt ins Mittelfeld
                             statistik.push({
                                 halbzeit: i,
-                                minute: j % 10,
+                                minute: minute,
                                 ballbesitzVorher: ballbesitz,
                                 ballbesitzNachher: HEIM,
                                 ballpositionVorher: ballposition,
@@ -334,7 +335,7 @@ function spielSpielen(heimindex, gastindex) {
                             // Ballbesitz bleibt, Ballposition bleibt
                             statistik.push({
                                 halbzeit: i,
-                                minute: j % 10,
+                                minute: minute,
                                 ballbesitzVorher: ballbesitz,
                                 ballbesitzNachher: ballbesitz,
                                 ballpositionVorher: ballposition,
@@ -347,7 +348,7 @@ function spielSpielen(heimindex, gastindex) {
                             // Ballbesitz bleibt, Ballposition bleibt
                             statistik.push({
                                 halbzeit: i,
-                                minute: j % 10,
+                                minute: minute,
                                 ballbesitzVorher: ballbesitz,
                                 ballbesitzNachher: ballbesitz,
                                 ballpositionVorher: ballposition,
@@ -360,7 +361,7 @@ function spielSpielen(heimindex, gastindex) {
                             // Ballbesitz wechselt, Ballposition bleibt
                             statistik.push({
                                 halbzeit: i,
-                                minute: j % 10,
+                                minute: minute,
                                 ballbesitzVorher: ballbesitz,
                                 ballbesitzNachher: HEIM,
                                 ballpositionVorher: ballposition,
@@ -377,7 +378,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz bleibt, Ballposition bleibt
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: ballbesitz,
                             ballpositionVorher: ballposition,
@@ -392,7 +393,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz bleibt, Ballposition bleibt
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: ballbesitz,
                             ballpositionVorher: ballposition,
@@ -407,7 +408,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz wechselt, Ballposition bleibt
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: HEIM,
                             ballpositionVorher: ballposition,
@@ -428,7 +429,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz bleibt, Ballposition verschiebt ins Gastdrittel
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: ballbesitz,
                             ballpositionVorher: ballposition,
@@ -444,7 +445,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz bleibt, Ballposition bleibt
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: ballbesitz,
                             ballpositionVorher: ballposition,
@@ -459,7 +460,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz bleibt, Ballposition bleibt
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: ballbesitz,
                             ballpositionVorher: ballposition,
@@ -474,7 +475,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz wechselt, Ballposition bleibt
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: GAST,
                             ballpositionVorher: ballposition,
@@ -492,7 +493,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz bleibt, Ballposition verschiebt ins Heimdrittel
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: ballbesitz,
                             ballpositionVorher: ballposition,
@@ -508,7 +509,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz bleibt, Ballposition bleibt
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: ballbesitz,
                             ballpositionVorher: ballposition,
@@ -523,7 +524,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz bleibt, Ballposition bleibt
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: ballbesitz,
                             ballpositionVorher: ballposition,
@@ -538,7 +539,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz wechselt, Ballposition bleibt
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: HEIM,
                             ballpositionVorher: ballposition,
@@ -566,7 +567,7 @@ function spielSpielen(heimindex, gastindex) {
                             // Ballbesitz wechselt, Ballposition verschiebt ins Mittelfeld
                             statistik.push({
                                 halbzeit: i,
-                                minute: j % 10,
+                                minute: minute,
                                 ballbesitzVorher: ballbesitz,
                                 ballbesitzNachher: GAST,
                                 ballpositionVorher: ballposition,
@@ -582,7 +583,7 @@ function spielSpielen(heimindex, gastindex) {
                             // Ballbesitz bleibt, Ballposition bleibt
                             statistik.push({
                                 halbzeit: i,
-                                minute: j % 10,
+                                minute: minute,
                                 ballbesitzVorher: ballbesitz,
                                 ballbesitzNachher: ballbesitz,
                                 ballpositionVorher: ballposition,
@@ -595,7 +596,7 @@ function spielSpielen(heimindex, gastindex) {
                             // Ballbesitz bleibt, Ballposition bleibt
                             statistik.push({
                                 halbzeit: i,
-                                minute: j % 10,
+                                minute: minute,
                                 ballbesitzVorher: ballbesitz,
                                 ballbesitzNachher: ballbesitz,
                                 ballpositionVorher: ballposition,
@@ -608,7 +609,7 @@ function spielSpielen(heimindex, gastindex) {
                             // Ballbesitz wechselt, Ballposition bleibt
                             statistik.push({
                                 halbzeit: i,
-                                minute: j % 10,
+                                minute: minute,
                                 ballbesitzVorher: ballbesitz,
                                 ballbesitzNachher: GAST,
                                 ballpositionVorher: ballposition,
@@ -625,7 +626,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz bleibt, Ballposition bleibt
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: ballbesitz,
                             ballpositionVorher: ballposition,
@@ -640,7 +641,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz bleibt, Ballposition bleibt
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: ballbesitz,
                             ballpositionVorher: ballposition,
@@ -655,7 +656,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz wechselt, Ballposition bleibt
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: GAST,
                             ballpositionVorher: ballposition,
@@ -673,7 +674,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz bleibt, Ballposition verschiebt ins Mittelfeld
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: ballbesitz,
                             ballpositionVorher: ballposition,
@@ -689,7 +690,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz bleibt, Ballposition bleibt
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: ballbesitz,
                             ballpositionVorher: ballposition,
@@ -704,7 +705,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz bleibt, Ballposition bleibt
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: ballbesitz,
                             ballpositionVorher: ballposition,
@@ -719,7 +720,7 @@ function spielSpielen(heimindex, gastindex) {
                         // Ballbesitz wechselt, Ballposition bleibt
                         statistik.push({
                             halbzeit: i,
-                            minute: j % 10,
+                            minute: minute,
                             ballbesitzVorher: ballbesitz,
                             ballbesitzNachher: HEIM,
                             ballpositionVorher: ballposition,

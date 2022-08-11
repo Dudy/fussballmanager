@@ -27,7 +27,7 @@
         [x] wenn ein Spiel ansteht, werte es aus
         [x] zeige eine Seite mit dem Spielergebnis an
                 [x] Kurzanalyse
-                [ ] Statistik
+                [x] Statistik
                         - Level 0: Tor
                         - Level 1: Torschuss, Ballbesitzwechsel
                         - Level 2: Ball wird nach vorne gespielt

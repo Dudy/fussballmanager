@@ -167,6 +167,7 @@ cell {
     display: flex;
     flex-direction: column;
     border-bottom: solid 1px var(--light);
+    padding-bottom: 1rem;
     margin-bottom: 1rem;
 }
 
@@ -208,12 +209,45 @@ cell {
     display: flex;
     flex-direction: column;
     border-bottom: solid 1px var(--light);
+    padding-bottom: 1rem;
     margin-bottom: 1rem;
+}
+.statistikinhalt {
+    display: flex;
+    flex-direction: row;
+}
+.statistikausgabe {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    justify-content: space-between;
+}
+.statistikausgabe cell {
+    border: none;
+}
+
+.statistikminute,
+.statistikballbesitz,
+.statistiktext {
+    display: flex;
+    flex-direction: column;
+}
+.statistiktext {
+    flex-grow: 1;
+}
+
+.statistiknavigation {
+    display: flex;
+    flex-direction: column;
+}
+.statistiknavigation * {
+    margin-bottom: 2px;
 }
 
 .vorschau {
     display: flex;
     flex-direction: column;
     border-bottom: solid 1px var(--light);
+    padding-bottom: 1rem;
     margin-bottom: 1rem;
 }

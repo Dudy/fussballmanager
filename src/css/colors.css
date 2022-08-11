@@ -6,4 +6,7 @@
     --very-light: #caf0f8;
 
     --textcolor: #000000;
+    --bg-color: #eaeaea;
+    --item-active-bg-color: #cccccc;
+    --item-hover-bg-color: #ffffff;
 }

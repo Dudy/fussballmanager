@@ -1,8 +1,4 @@
-nav {
-    --bg-color: #eaeaea;
-    --item-active-bg-color: #cccccc;
-    --item-hover-bg-color: #ffffff;
-}
+@import "colors.css";
 
 nav.navbar-top {
     display: flex;

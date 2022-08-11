@@ -8,7 +8,8 @@ export const data = {
     },
     saisons: [],
     aktuelleSaison: 2022,
-    aktuellerSpieltag: 0
+    aktuellerSpieltag: 0,
+    statistiklevel: 0
 };
 
 export function aktuelleSaison() {
