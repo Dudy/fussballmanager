@@ -28,8 +28,12 @@
         [x] zeige eine Seite mit dem Spielergebnis an
                 [x] Kurzanalyse
                 [ ] Statistik
+                        - Level 0: Tor
+                        - Level 1: Torschuss, Ballbesitzwechsel
+                        - Level 2: Ball wird nach vorne gespielt
+                        - Level 3: Querpass
                 [ ] Vorschau
-[ ] erstelle eine Spielstatistik, das ist einfach jede Ballaktion als kleiner Text
+[x] erstelle eine Spielstatistik, das ist einfach jede Ballaktion als kleiner Text
 
 ----- interne Logik
 [x] lagere Daten (Mannschaftsnamen) in eine Datei aus und lese sie separat ein

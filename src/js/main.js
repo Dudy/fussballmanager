@@ -162,6 +162,7 @@ function spielSpielen(heimindex, gastindex) {
 
     const heimmannschaft = data.mannschaften[heimindex]
     const gastmannschaft = data.mannschaften[gastindex]
+    const statistik = [];
 
     const heimAngriff =
         heimmannschaft.spielerNachRueckennummer[heimmannschaft.startelf.LA].spielstaerke.angriff +
@@ -244,22 +245,62 @@ function spielSpielen(heimindex, gastindex) {
                         // |oooooooooo|----------||----------|----------|          random liegt im ersten Viertel
                         // Heimmannschaft im eigenen Drittel in Ballbesitz, Pass nach Vorne
                         // Ballbesitz bleibt, Ballposition verschiebt ins Mittelfeld
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: ballbesitz,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: MITTELFELD,
+                            text: 'Ein neuer Spielaufbau.',
+                            level: 2
+                        });
                         ballposition = MITTELFELD;
                     } else if (random < heimVerteidigung) {
                         // |--Heimverteidigung---||--Gastangriff--------|
                         // |----------|oooooooooo||----------|----------|          random liegt im zweiten Viertel
                         // Heimmannschaft im eigenen Drittel in Ballbesitz, Querpass
                         // Ballbesitz bleibt, Ballposition bleibt
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: ballbesitz,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: ballposition,
+                            text: 'Querpass',
+                            level: 3
+                        });
                     } else if (random < heimVerteidigung + gastAngriff * DEFENSIVE_GRENZE) {
                         // |--Heimverteidigung---||--Gastangriff--------|
                         // |----------|----------||oooooooooo|----------|          random liegt im dritten Viertel
                         // Heimmannschaft im eigenen Drittel in Ballbesitz, Querpass
                         // Ballbesitz bleibt, Ballposition bleibt
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: ballbesitz,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: ballposition,
+                            text: 'Abspiel',
+                            level: 3
+                        });
                     } else {
                         // |--Heimverteidigung---||--Gastangriff--------|
                         // |----------|----------||----------|oooooooooo|          random liegt im vierten Viertel
                         // Heimmannschaft verliert den Ball im eigenen Drittel
                         // Ballbesitz wechselt, Ballposition bleibt
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: GAST,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: ballposition,
+                            text: 'Die Gastmannschaft erobert mit offensivem Pressing den Ball bereits in der gegnerischen Hälfte.',
+                            level: 1
+                        });
                         ballbesitz = GAST;
                     }
                 } else if (ballbesitz === GAST) {
@@ -275,18 +316,58 @@ function spielSpielen(heimindex, gastindex) {
                         if (torschuss < angreiferStaerke * OFFENSIVE_GRENZE) {
                             // Gastmannschaft erzielt Tor
                             // Ballbesitz wechselt, Ballposition verschiebt ins Mittelfeld
+                            statistik.push({
+                                halbzeit: i,
+                                minute: j % 10,
+                                ballbesitzVorher: ballbesitz,
+                                ballbesitzNachher: HEIM,
+                                ballpositionVorher: ballposition,
+                                ballpositionNachher: MITTELFELD,
+                                text: `TOR! Die Gäste erzielen ein Tor. Es steht nun ${heimtore} : ${gasttore + 1}`,
+                                level: 0
+                            });
                             gasttore++;
                             ballposition = MITTELFELD;
                             ballbesitz = HEIM;
                         } else if (torschuss < angreiferStaerke) {
                             // Heimtorwart hält, aber Gastmannschaft erobert den zweiten Ball
                             // Ballbesitz bleibt, Ballposition bleibt
+                            statistik.push({
+                                halbzeit: i,
+                                minute: j % 10,
+                                ballbesitzVorher: ballbesitz,
+                                ballbesitzNachher: ballbesitz,
+                                ballpositionVorher: ballposition,
+                                ballpositionNachher: ballposition,
+                                text: 'Ein Torabschluss der Gäste kann vom Torwart abgewehrt werden, die Gäste bleiben aber in Ballbesitz.',
+                                level: 1
+                            });
                         } else if (torschuss < angreiferStaerke + heimTor * DEFENSIVE_GRENZE) {
-                            // Heimtorwart hält, aber Gastmannschaft erobert den zweiten Ball
+                            // Abwehr blockt, aber Gastmannschaft erobert den zweiten Ball
                             // Ballbesitz bleibt, Ballposition bleibt
+                            statistik.push({
+                                halbzeit: i,
+                                minute: j % 10,
+                                ballbesitzVorher: ballbesitz,
+                                ballbesitzNachher: ballbesitz,
+                                ballpositionVorher: ballposition,
+                                ballpositionNachher: ballposition,
+                                text: 'Ein Torschuss der Gäste wird von der Abwehr geblockt, sie erobern aber den zweiten Ball und bleiben im Ballbesitz.',
+                                level: 1
+                            });
                         } else {
                             // Heimtorwart hält den Ball fest
                             // Ballbesitz wechselt, Ballposition bleibt
+                            statistik.push({
+                                halbzeit: i,
+                                minute: j % 10,
+                                ballbesitzVorher: ballbesitz,
+                                ballbesitzNachher: HEIM,
+                                ballpositionVorher: ballposition,
+                                ballpositionNachher: ballposition,
+                                text: 'Der Torwart pariert den Torschuss der Gäste und kann den Ball festhalten.',
+                                level: 1
+                            });
                             ballbesitz = HEIM;
                         }
                     } else if (random < gastAngriff) {
@@ -294,16 +375,46 @@ function spielSpielen(heimindex, gastindex) {
                         // |----------|oooooooooo||----------|----------|          random liegt im zweiten Viertel
                         // Gastmannschaft im gegnerischen Drittel in Ballbesitz, Querpass
                         // Ballbesitz bleibt, Ballposition bleibt
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: ballbesitz,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: ballposition,
+                            text: 'Die Gäste schieben sich in der gegnerischen Hälfte den Ball hin und her.',
+                            level: 3
+                        });
                     } else if (random < gastAngriff + heimVerteidigung * DEFENSIVE_GRENZE) {
                         // |--Gastangriff--------||--Heimverteidigung---|
                         // |----------|----------||oooooooooo|----------|          random liegt im dritten Viertel
                         // Gastmannschaft im gegnerischen Drittel in Ballbesitz, Querpass
                         // Ballbesitz bleibt, Ballposition bleibt
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: ballbesitz,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: ballposition,
+                            text: 'Die Gäste finden kein Durchkommen gegen die vielbeinige Abwehr der Heimmannschaft.',
+                            level: 3
+                        });
                     } else {
                         // |--Gastangriff--------||--Heimverteidigung---|
                         // |----------|----------||----------|oooooooooo|          random liegt im vierten Viertel
-                        // Gastmannschaft verliert den Ball im eigenen Drittel
+                        // Gastmannschaft verliert den Ball im gegnerischen Drittel
                         // Ballbesitz wechselt, Ballposition bleibt
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: HEIM,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: ballposition,
+                            text: 'Die Heimmannschaft erobert mit offensivem Pressing den Ball bereits in der gegnerischen Hälfte.',
+                            level: 1
+                        });
                         ballbesitz = HEIM;
                     }
                 }
@@ -315,22 +426,62 @@ function spielSpielen(heimindex, gastindex) {
                         // |oooooooooo|----------||----------|----------|          random liegt im ersten Viertel
                         // Heimmannschaft im Mittelfeld in Ballbesitz, Pass nach Vorne
                         // Ballbesitz bleibt, Ballposition verschiebt ins Gastdrittel
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: ballbesitz,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: GASTDRITTEL,
+                            text: 'Ein schöner Pass in den Strafraum des Gegners.',
+                            level: 2
+                        });
                         ballposition = GASTDRITTEL;
                     } else if (random < heimMittelfeld) {
                         // |--Heimmittelfeld-----||--Gastmittelfeld-----|
                         // |----------|oooooooooo||----------|----------|          random liegt im zweiten Viertel
                         // Heimmannschaft im Mittelfeld in Ballbesitz, Querpass
                         // Ballbesitz bleibt, Ballposition bleibt
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: ballbesitz,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: ballposition,
+                            text: 'Querpass',
+                            level: 3
+                        });
                     } else if (random < heimMittelfeld + gastMittelfeld * DEFENSIVE_GRENZE) {
                         // |--Heimmittelfeld-----||--Gastmittelfeld-----|
                         // |----------|----------||oooooooooo|----------|          random liegt im dritten Viertel
                         // Heimmannschaft im Mittelfeld in Ballbesitz, Querpass
                         // Ballbesitz bleibt, Ballposition bleibt
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: ballbesitz,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: ballposition,
+                            text: 'Abspiel',
+                            level: 3
+                        });
                     } else {
                         // |--Heimmittelfeld-----||--Gastmittelfeld-----|
                         // |----------|----------||----------|oooooooooo|          random liegt im vierten Viertel
                         // Heimmannschaft verliert den Ball im Mittelfeld
                         // Ballbesitz wechselt, Ballposition bleibt
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: GAST,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: ballposition,
+                            text: 'Die Gäste können den Ball im Mittelfeld erobern.',
+                            level: 1
+                        });
                         ballbesitz = GAST;
                     }
                 } else if (ballbesitz === GAST) {
@@ -339,22 +490,62 @@ function spielSpielen(heimindex, gastindex) {
                         // |oooooooooo|----------||----------|----------|          random liegt im ersten Viertel
                         // Gastmannschaft im Mittelfeld in Ballbesitz, Pass nach Vorne
                         // Ballbesitz bleibt, Ballposition verschiebt ins Heimdrittel
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: ballbesitz,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: HEIMDRITTEL,
+                            text: 'Die Gäste bauen starken Druck nach vorne auf.',
+                            level: 2
+                        });
                         ballposition = HEIMDRITTEL;
                     } else if (random < gastMittelfeld) {
                         // |--Gastmittelfeld-----||--Heimmittelfeld-----|
                         // |----------|oooooooooo||----------|----------|          random liegt im zweiten Viertel
                         // Gastmannschaft im Mittelfeld in Ballbesitz, Querpass
                         // Ballbesitz bleibt, Ballposition bleibt
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: ballbesitz,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: ballposition,
+                            text: 'Querpass',
+                            level: 3
+                        });
                     } else if (random < gastMittelfeld + heimMittelfeld * DEFENSIVE_GRENZE) {
                         // |--Gastmittelfeld-----||--Heimmittelfeld-----|
                         // |----------|----------||oooooooooo|----------|          random liegt im dritten Viertel
                         // Gastmannschaft im Mittelfeld in Ballbesitz, Querpass
                         // Ballbesitz bleibt, Ballposition bleibt
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: ballbesitz,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: ballposition,
+                            text: 'Abspiel',
+                            level: 3
+                        });
                     } else {
                         // |--Gastmittelfeld-----||--Heimmittelfeld-----|
                         // |----------|----------||----------|oooooooooo|          random liegt im vierten Viertel
                         // Gastmannschaft verliert den Ball im Mittelfeld
                         // Ballbesitz wechselt, Ballposition bleibt
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: HEIM,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: ballposition,
+                            text: 'Die Gäste vertändeln den Ball im Mittelfeld.',
+                            level: 1
+                        });
                         ballbesitz = HEIM;
                     }
                 }
@@ -373,18 +564,58 @@ function spielSpielen(heimindex, gastindex) {
                         if (torschuss < angreiferStaerke * OFFENSIVE_GRENZE) {
                             // Heimmannschaft erzielt Tor
                             // Ballbesitz wechselt, Ballposition verschiebt ins Mittelfeld
+                            statistik.push({
+                                halbzeit: i,
+                                minute: j % 10,
+                                ballbesitzVorher: ballbesitz,
+                                ballbesitzNachher: GAST,
+                                ballpositionVorher: ballposition,
+                                ballpositionNachher: MITTELFELD,
+                                text: `TOR! Die Heimmannschaft erzielt ein Tor. Es steht nun ${heimtore + 1} : ${gasttore}`,
+                                level: 0
+                            });
                             heimtore++;
                             ballposition = MITTELFELD;
                             ballbesitz = GAST;
                         } else if (torschuss < angreiferStaerke) {
                             // Gasttorwart hält, aber Heimmannschaft erobert den zweiten Ball
                             // Ballbesitz bleibt, Ballposition bleibt
+                            statistik.push({
+                                halbzeit: i,
+                                minute: j % 10,
+                                ballbesitzVorher: ballbesitz,
+                                ballbesitzNachher: ballbesitz,
+                                ballpositionVorher: ballposition,
+                                ballpositionNachher: ballposition,
+                                text: 'Ein Torabschluss kann vom Gästetorwart abgewehrt werden, die Heimmannschaft bleibt aber in Ballbesitz.',
+                                level: 1
+                            });
                         } else if (torschuss < angreiferStaerke + gastTor * DEFENSIVE_GRENZE) {
-                            // Gasttorwart hält, aber Heimmannschaft erobert den zweiten Ball
+                            // Abwehr blockt, aber Heimmannschaft erobert den zweiten Ball
                             // Ballbesitz bleibt, Ballposition bleibt
+                            statistik.push({
+                                halbzeit: i,
+                                minute: j % 10,
+                                ballbesitzVorher: ballbesitz,
+                                ballbesitzNachher: ballbesitz,
+                                ballpositionVorher: ballposition,
+                                ballpositionNachher: ballposition,
+                                text: 'Ein Torschuss wird von der Gästeabwehr geblockt, die Heimmannschaft erobert aber den zweiten Ball und bleibt im Ballbesitz.',
+                                level: 1
+                            });
                         } else {
                             // Gasttorwart hält den Ball fest
                             // Ballbesitz wechselt, Ballposition bleibt
+                            statistik.push({
+                                halbzeit: i,
+                                minute: j % 10,
+                                ballbesitzVorher: ballbesitz,
+                                ballbesitzNachher: GAST,
+                                ballpositionVorher: ballposition,
+                                ballpositionNachher: ballposition,
+                                text: 'Der Gästetorwart pariert den Torschuss und kann den Ball festhalten.',
+                                level: 1
+                            });
                             ballbesitz = GAST;
                         }
                     } else if (random < heimAngriff) {
@@ -392,16 +623,46 @@ function spielSpielen(heimindex, gastindex) {
                         // |----------|oooooooooo||----------|----------|          random liegt im zweiten Viertel
                         // Heimmannschaft im gegnerischen Drittel in Ballbesitz, Querpass
                         // Ballbesitz bleibt, Ballposition bleibt
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: ballbesitz,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: ballposition,
+                            text: 'Die Heimmannschaft schiebt sich in der gegnerischen Hälfte den Ball hin und her.',
+                            level: 3
+                        });
                     } else if (random < heimAngriff + gastVerteidigung * DEFENSIVE_GRENZE) {
                         // |--Heimangriff--------||--Gastverteidigung---|
                         // |----------|----------||oooooooooo|----------|          random liegt im dritten Viertel
                         // Heimmannschaft im gegnerischen Drittel in Ballbesitz, Querpass
                         // Ballbesitz bleibt, Ballposition bleibt
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: ballbesitz,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: ballposition,
+                            text: 'Die Heimmannschaft findt kein Durchkommen gegen die vielbeinige Abwehr der Gäste.',
+                            level: 3
+                        });
                     } else {
                         // |--Heimangriff--------||--Gastverteidigung---|
                         // |----------|----------||----------|oooooooooo|          random liegt im vierten Viertel
-                        // Heimmannschaft verliert den Ball im eigenen Drittel
+                        // Heimmannschaft verliert den Ball im gegnerischen Drittel
                         // Ballbesitz wechselt, Ballposition bleibt
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: GAST,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: ballposition,
+                            text: 'Die gute Verteidigung der Gäste erobert den Ball im eigenen Sechzehner.',
+                            level: 1
+                        });
                         ballbesitz = GAST;
                     }
                 } else if (ballbesitz === GAST) {
@@ -410,22 +671,62 @@ function spielSpielen(heimindex, gastindex) {
                         // |oooooooooo|----------||----------|----------|          random liegt im ersten Viertel
                         // Gastmannschaft im eigenen Drittel in Ballbesitz, Pass nach Vorne
                         // Ballbesitz bleibt, Ballposition verschiebt ins Mittelfeld
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: ballbesitz,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: MITTELFELD,
+                            text: 'Die Gäste bauen von hinten heraus neu auf.',
+                            level: 2
+                        });
                         ballposition = MITTELFELD;
                     } else if (random < gastVerteidigung) {
                         // |--Gastverteidigung---||--Heimangriff--------|
                         // |----------|oooooooooo||----------|----------|          random liegt im zweiten Viertel
                         // Gastmannschaft im eigenen Drittel in Ballbesitz, Querpass
                         // Ballbesitz bleibt, Ballposition bleibt
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: ballbesitz,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: ballposition,
+                            text: 'Querpass',
+                            level: 3
+                        });
                     } else if (random < gastVerteidigung + heimAngriff * DEFENSIVE_GRENZE) {
                         // |--Gastverteidigung---||--Heimangriff--------|
                         // |----------|----------||oooooooooo|----------|          random liegt im dritten Viertel
                         // Gastmannschaft im eigenen Drittel in Ballbesitz, Querpass
                         // Ballbesitz bleibt, Ballposition bleibt
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: ballbesitz,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: ballposition,
+                            text: 'Abspiel',
+                            level: 3
+                        });
                     } else {
                         // |--Gastverteidigung---||--Heimangriff--------|
                         // |----------|----------||----------|oooooooooo|          random liegt im vierten Viertel
                         // Gastmannschaft verliert den Ball im eigenen Drittel
                         // Ballbesitz wechselt, Ballposition bleibt
+                        statistik.push({
+                            halbzeit: i,
+                            minute: j % 10,
+                            ballbesitzVorher: ballbesitz,
+                            ballbesitzNachher: HEIM,
+                            ballpositionVorher: ballposition,
+                            ballpositionNachher: ballposition,
+                            text: 'Die Gäste verlieren den Ball bereits in der eigenen Hälfte schnell wieder.',
+                            level: 1
+                        });
                         ballbesitz = HEIM;
                     }
                 }
@@ -433,7 +734,7 @@ function spielSpielen(heimindex, gastindex) {
         }
     }
 
-    return [heimtore, gasttore]
+    return [heimtore, gasttore, statistik]
 }
 
 function spieleSpieltag() {
@@ -442,9 +743,10 @@ function spieleSpieltag() {
     const spieltagspaarungen = data.spieltage[spieltagIndex];
     
     for (const [spielIndex, spiel] of Object.entries(saison.spieltage[spieltagIndex].spiele)) {
-        const [heimtore, gasttore] = spielSpielen(spieltagspaarungen[spielIndex].heim, spieltagspaarungen[spielIndex].gast)
+        const [heimtore, gasttore, statistik] = spielSpielen(spieltagspaarungen[spielIndex].heim, spieltagspaarungen[spielIndex].gast)
         spiel.toreHeim = heimtore;
         spiel.toreGast = gasttore;
+        spiel.statistik = statistik;
 
         if (spiel.heim === data.manager.mannschaft || spiel.gast === data.manager.mannschaft) {
             data.letztesSpiel = spiel;
