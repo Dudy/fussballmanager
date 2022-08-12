@@ -1,5 +1,6 @@
 @import "colors.css";
 
+/* ----- obere Hauptnavigation ----- */
 nav.navbar-top {
     display: flex;
     flex-direction: row;
@@ -29,6 +30,7 @@ nav.navbar-top {
     margin-left: 1rem;
 }
 
+/* ----- linke Subnavigation ----- */
 nav.navbar-left {
     display: flex;
     flex-direction: column;

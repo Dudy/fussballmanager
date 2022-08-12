@@ -3,13 +3,36 @@ import { data, aktuelleSaison, istSpieltag, getSpieltagIndex, getLetztenSpieltag
 import { show as showUebersicht } from './spieltag/uebersicht.js';
 import { show as showAufstellung } from './spieltag/aufstellung.js';
 import { show as showLetztesSpiel } from './spieltag/letztesSpiel.js';
+import { show as showIndividualtraining } from './mannschaft/individualtraining.js';
+import './router.js';
 
+/* ----- navigation ----- */
+const navigation = {
+    spieltag: showUebersicht,
+    mannschaft: showIndividualtraining
+}
+function hauptnavigation(event) {
+    // Navigation managen
+    document.querySelectorAll('li.nav-item').forEach(item => item.classList.remove('active'));
+    event.target.parentElement.classList.add('active');
+
+    // Inhalt umschalten
+    const sektion = event.target.href.split('#')[1];
+    navigation[sektion]();
+}
+
+function initNavigation() {
+    document.querySelectorAll('.navbar-top li.nav-item a').forEach(item => item.addEventListener('click', hauptnavigation));
+    document.querySelector('#naechsterTag').addEventListener('click', naechsterTag);
+    document.querySelector('#spieleSpieltag').addEventListener('click', spieleSpieltag);
+}
+
+/* ----- init ----- */
 export async function init() {
     document.querySelector('div.rechte-seite #managername').textContent = data.manager.name;
     document.querySelector('div.rechte-seite #aktuellesdatum').textContent = formatDatum(data.aktuellesDatum);
-    document.querySelector('#naechsterTag').addEventListener('click', naechsterTag);
-    document.querySelector('#spieleSpieltag').addEventListener('click', spieleSpieltag);
-
+    
+    initNavigation();
     await initData();
 
     fuegeSpielerZuMannschaftenHinzu();

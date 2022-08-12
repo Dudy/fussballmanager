@@ -1,0 +1,45 @@
+.individualtraining {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.mannschaft {
+    display: flex;
+    flex-direction: column;
+}
+.mannschaftstabelle {
+    display: flex;
+    flex-direction: row;
+}
+
+.spieler {
+    display: flex;
+    flex-direction: column;
+}
+.spieler column {
+    display: flex;
+    flex-direction: column;
+}
+.spielertabelle {
+    display: flex;
+    flex-direction: row;
+}
+
+column {
+    display: flex;
+    flex-direction: row;
+}
+
+cell {
+    border: solid 1px black;
+}
+
+
+
+
+.abc {
+    display: flex;
+    flex-direction: column;
+}

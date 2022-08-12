@@ -2,14 +2,20 @@
 [x] füge Spieler zu Mannschaften hinzu
 [x] mach das Ergebnis eines Spiels nicht mehr zufällig, sondern abhängig von den Eigenschaften der Spieler
         [x] das beinhaltet ein irgendwie geartetes Aufstellen einer Startelf für alle Mannschaften (ausser der des Managers)
+[ ] neben individuellen Eigenschaften der Spieler sollen auch Mannschaftseigenschaften eine Rolle spielen
+        [ ] Standards
+        [ ] Abwehr
+        [ ] Pressing
+        [ ] Konter
+        [ ] Spielzüge
 [x] benutze den Spielplan, um die Spieltage zu erstellen, nicht den Zufall
 [x] Spieltag
         [x] aktuelle Tabelle
         [x] Spiele des Spieltags
         [x] Aufstellung meiner Mannschaft
 [ ] Mannschaft
+        [o] Individualtraining (Spieler)
         [ ] Teamtraining
-        [ ] Individualtraining (Spieler)
         [ ] Transfermarkt
         [ ] Mitarbeiter (Coach, Cotrainer, Physio, Arzt, Marketing)
 [ ] Finanzen

@@ -1,16 +1,6 @@
 @import "colors.css";
 
 /* ----- Übersicht ----- */
-.left-aligned-children cell {
-    text-align: left;
-}
-.center-aligned-children cell {
-    text-align: center;
-}
-.right-aligned-children cell {
-    text-align: right;
-}
-
 .flex-tabelle {
     display: flex;
     justify-content: space-between;

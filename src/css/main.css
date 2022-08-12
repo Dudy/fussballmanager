@@ -1,6 +1,7 @@
 @import "navigation.css";
 @import "spieltag.css";
 @import "colors.css";
+@import "mannschaft.css";
 
 html {
     font-family: Tahoma, Verdana, sans-serif;
@@ -21,7 +22,7 @@ main {
 }
 
 #subnavigation {
-    width: 8rem;
+    width: 12rem;
     margin-right: 1.5rem;
 }
 
@@ -60,6 +61,16 @@ button:disabled {
 
 .no-border {
     border: none;
+}
+
+.left-aligned-children cell {
+    text-align: left;
+}
+.center-aligned-children cell {
+    text-align: center;
+}
+.right-aligned-children cell {
+    text-align: right;
 }
 
 /* ----- action bar at bottom ----- */
