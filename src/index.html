@@ -5,21 +5,9 @@
         <link rel="stylesheet" type="text/css" href="css/main.css" />
     </head>
     <body>
-        <nav class="navbar-top" aria-label="main navigation">
-            <a href="http://www.pomis.de/games/fussballmanager" class="logo">
-                <p>Fussball Manager</p>
-            </a>
-            <ul class="nav-links">
-                <li class="nav-item active"><a href="#spieltag">Spieltag</a></li>
-                <li class="nav-item"><a href="#mannschaft">Mannschaft</a></li>
-                <li class="nav-item"><a href="#">Menu 3</a></li>
-                <li class="nav-item"><a href="#">Menu 4</a></li>
-            </ul>
-            <div class="rechte-seite">
-                <p id="aktuellesdatum">---</p>
-                <p id="managername">---</p>
-            </div>
-        </nav>
+        <header>
+            <section id="hauptnavigation"></section>
+        </header>
 
         <main>
             <section id="subnavigation"></section>
@@ -39,6 +27,24 @@
             </section>
         </footer>
         
+        <template id="hauptnavigationTemplate">
+            <nav class="navbar-top" aria-label="main navigation">
+                <a href="http://www.pomis.de/games/fussballmanager" class="logo">
+                    <p>Fussball Manager</p>
+                </a>
+                <ul class="nav-links">
+                    <li class="nav-item active"><a href="#spieltag">Spieltag</a></li>
+                    <li class="nav-item"><a href="#mannschaft">Mannschaft</a></li>
+                    <li class="nav-item"><a href="#">Menu 3</a></li>
+                    <li class="nav-item"><a href="#">Menu 4</a></li>
+                </ul>
+                <div class="rechte-seite">
+                    <p id="aktuellesdatum">---</p>
+                    <p id="managername">---</p>
+                </div>
+            </nav>
+        </template>
+
         <template id="subnavigationTemplate">
             <nav class="navbar-left" aria-label="subnavigation">
                 <ul class="nav-links">
@@ -311,6 +317,177 @@
                     </div>
                 </div>
                 -->
+            </div>
+        </template>
+
+        <template id="mannschaftMannschaftstrainingTemplate">
+            <div class="mannschaftstraining">
+                <div class="foo">
+                    <p>Foo</p>
+                    <div class="bar">
+                        <column>
+                            <cell>0</cell>
+                            <cell>1</cell>
+                            <cell>2</cell>
+                            <cell>3</cell>
+                            <cell>4</cell>
+                        </column>
+                        <column>
+                            <cell>Zero</cell>
+                            <cell>One</cell>
+                            <cell>Two</cell>
+                            <cell>Three</cell>
+                            <cell>Four</cell>
+                        </column>
+                        <column>
+                            <cell>A</cell>
+                            <cell>B</cell>
+                            <cell>C</cell>
+                            <cell>D</cell>
+                            <cell>E</cell>
+                        </column>
+                    </div>
+                </div>
+                <div class="foo">
+                    <p>Foo</p>
+                    <div class="bar">
+                        <column>
+                            <cell>0</cell>
+                            <cell>1</cell>
+                            <cell>2</cell>
+                            <cell>3</cell>
+                            <cell>4</cell>
+                        </column>
+                        <column>
+                            <cell>Zero</cell>
+                            <cell>One</cell>
+                            <cell>Two</cell>
+                            <cell>Three</cell>
+                            <cell>Four</cell>
+                        </column>
+                        <column>
+                            <cell>A</cell>
+                            <cell>B</cell>
+                            <cell>C</cell>
+                            <cell>D</cell>
+                            <cell>E</cell>
+                        </column>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="mannschaftTransfermarktTemplate">
+            <div class="transfermarkt">
+                <div class="foo">
+                    <p>Foo</p>
+                    <div class="bar">
+                        <column>
+                            <cell>0</cell>
+                            <cell>1</cell>
+                            <cell>2</cell>
+                            <cell>3</cell>
+                            <cell>4</cell>
+                        </column>
+                        <column>
+                            <cell>Zero</cell>
+                            <cell>One</cell>
+                            <cell>Two</cell>
+                            <cell>Three</cell>
+                            <cell>Four</cell>
+                        </column>
+                        <column>
+                            <cell>A</cell>
+                            <cell>B</cell>
+                            <cell>C</cell>
+                            <cell>D</cell>
+                            <cell>E</cell>
+                        </column>
+                    </div>
+                </div>
+                <div class="foo">
+                    <p>Foo</p>
+                    <div class="bar">
+                        <column>
+                            <cell>0</cell>
+                            <cell>1</cell>
+                            <cell>2</cell>
+                            <cell>3</cell>
+                            <cell>4</cell>
+                        </column>
+                        <column>
+                            <cell>Zero</cell>
+                            <cell>One</cell>
+                            <cell>Two</cell>
+                            <cell>Three</cell>
+                            <cell>Four</cell>
+                        </column>
+                        <column>
+                            <cell>A</cell>
+                            <cell>B</cell>
+                            <cell>C</cell>
+                            <cell>D</cell>
+                            <cell>E</cell>
+                        </column>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="mannschaftMitarbeiterTemplate">
+            <div class="mitarbeiter">
+                <div class="foo">
+                    <p>Foo</p>
+                    <div class="bar">
+                        <column>
+                            <cell>0</cell>
+                            <cell>1</cell>
+                            <cell>2</cell>
+                            <cell>3</cell>
+                            <cell>4</cell>
+                        </column>
+                        <column>
+                            <cell>Zero</cell>
+                            <cell>One</cell>
+                            <cell>Two</cell>
+                            <cell>Three</cell>
+                            <cell>Four</cell>
+                        </column>
+                        <column>
+                            <cell>A</cell>
+                            <cell>B</cell>
+                            <cell>C</cell>
+                            <cell>D</cell>
+                            <cell>E</cell>
+                        </column>
+                    </div>
+                </div>
+                <div class="foo">
+                    <p>Foo</p>
+                    <div class="bar">
+                        <column>
+                            <cell>0</cell>
+                            <cell>1</cell>
+                            <cell>2</cell>
+                            <cell>3</cell>
+                            <cell>4</cell>
+                        </column>
+                        <column>
+                            <cell>Zero</cell>
+                            <cell>One</cell>
+                            <cell>Two</cell>
+                            <cell>Three</cell>
+                            <cell>Four</cell>
+                        </column>
+                        <column>
+                            <cell>A</cell>
+                            <cell>B</cell>
+                            <cell>C</cell>
+                            <cell>D</cell>
+                            <cell>E</cell>
+                        </column>
+                    </div>
+                </div>
             </div>
         </template>
 

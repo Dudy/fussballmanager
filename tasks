@@ -48,6 +48,11 @@
 [ ] überlege, ob der Spieltag überall Eins-basiert sein sollte oder weiterhin Null-basiert
 [x] führe "erzeugeSpielpaarungen" nicht immer wieder zur Startzeit aus, sondern hartkodiere es in einer JSON Datei
 [x] in "Aufstellung, benenne "Bank" in "Mannschaft" um
+[o] Überarbeitung der Logik der Navigation und der Subnavigation
+        [x] Generalisierung der Subnavigation
+        [ ] Umstellen der "Spieltag"-Subnavigation
+        [x] Umstellen der "Mannschaft"-Subnavigation
+        [ ] bei Subnavigation soll das gesamte <li> klickbar sein, nicht nur der <a>
 
 ----- UI
 [x] mache die Spalten immer gleich groß (Tabelle und Spieltag)

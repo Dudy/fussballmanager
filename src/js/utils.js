@@ -103,3 +103,63 @@ export function shuffle(a) {
    }
    return a;
 }
+
+/* ----- subnavigation ----- */
+export function initHauptnavigation(navigationFunctions) {
+    // Template instanziieren
+    const navigationElement = document.querySelector('#hauptnavigationTemplate').content.cloneNode(true);
+    const navigationContainer = navigationElement.querySelector('nav');
+
+    // Liste der Navigationsitems aufbauen
+    const navListItems = Array.from(Object.keys(navigationFunctions), item => erzeugeNavItem(item, navigationContainer, navigationFunctions));
+    const navListe = navigationContainer.querySelector('ul.nav-links');
+    navListe.replaceChildren(...navListItems);
+
+    // zu Beginn ist immer der erste Eintrag der aktive Eintrag
+    navListe.querySelector(`a[href="#${Object.keys(navigationFunctions)[0]}"]`).parentElement.classList.add('active');
+
+    // DOM Baum aktualisieren
+    document.querySelector('#hauptnavigation').replaceChildren(navigationElement);
+}
+
+export function initSubnavigation(navigationFunctions) {
+    // Template instanziieren
+    const subnavigationElement = document.querySelector('#subnavigationTemplate').content.cloneNode(true);
+    const navigationContainer = subnavigationElement.querySelector('nav');
+
+    // Liste der Navigationsitems aufbauen
+    const navListItems = Array.from(Object.keys(navigationFunctions), item => erzeugeNavItem(item, navigationContainer, navigationFunctions));
+    const navListe = navigationContainer.querySelector('ul.nav-links');
+    navListe.replaceChildren(...navListItems);
+
+    // zu Beginn ist immer der erste Eintrag der aktive Eintrag
+    navListe.querySelector(`a[href="#${Object.keys(navigationFunctions)[0]}"]`).parentElement.classList.add('active');
+
+    // DOM Baum aktualisieren
+    document.querySelector('#subnavigation').replaceChildren(subnavigationElement);
+}
+
+function erzeugeNavItem(item, navigationContainer, navigationFunctions) {
+    const anchor = document.createElement('a');
+    anchor.href = `#${item}`;
+    anchor.appendChild(document.createTextNode(item[0].toUpperCase() + item.substring(1)));
+    anchor.addEventListener('click', createClickHandler(navigationContainer, navigationFunctions));
+    
+    const listItem = document.createElement('li');
+    listItem.classList.add('nav-item');
+    listItem.appendChild(anchor);
+
+    return listItem;
+}
+
+export function createClickHandler(navigationContainer, navigationFunctions) {
+    return function(event) {
+        // Navigation managen
+        navigationContainer.querySelectorAll('li.nav-item').forEach(item => item.classList.remove('active'));
+        event.target.parentElement.classList.add('active');
+
+        // Inhalt umschalten
+        const sektion = event.target.href.split('#')[1];
+        navigationFunctions[sektion]();
+    }
+}

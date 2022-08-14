@@ -1,12 +1,8 @@
-import { data } from '../data.js';
-import { init as initSubnavigation } from './subnavigation.js';
-
 export function show() {
-    const individualtrainingElement = document.querySelector('#mannschaftIndividualtrainingTemplate').content.cloneNode(true);
-    document.querySelector('#inhalt').replaceChildren(individualtrainingElement);
-
+    const transfermarktElement = document.querySelector('#mannschaftTransfermarktTemplate').content.cloneNode(true);
+    document.querySelector('#inhalt').replaceChildren(transfermarktElement);
+    
     addEventHandler();
-    initSubnavigation('individualtraining');
 }
 
 function addEventHandler() {

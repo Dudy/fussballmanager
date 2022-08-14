@@ -1,43 +1,36 @@
-import { randomDate, randomInt, randomBool, shuffle, formatDatum } from './utils.js';
+import { randomDate, randomInt, randomBool, shuffle, formatDatum, createClickHandler, initHauptnavigation } from './utils.js';
 import { data, aktuelleSaison, istSpieltag, getSpieltagIndex, getLetztenSpieltagIndex } from './data.js';
 import { show as showUebersicht } from './spieltag/uebersicht.js';
 import { show as showAufstellung } from './spieltag/aufstellung.js';
 import { show as showLetztesSpiel } from './spieltag/letztesSpiel.js';
-import { show as showIndividualtraining } from './mannschaft/individualtraining.js';
-import './router.js';
+import { show as showMannschaft } from './mannschaft/mannschaft.js';
 
 /* ----- navigation ----- */
-const navigation = {
+const navigationFunctions = {
     spieltag: showUebersicht,
-    mannschaft: showIndividualtraining
-}
-function hauptnavigation(event) {
-    // Navigation managen
-    document.querySelectorAll('li.nav-item').forEach(item => item.classList.remove('active'));
-    event.target.parentElement.classList.add('active');
-
-    // Inhalt umschalten
-    const sektion = event.target.href.split('#')[1];
-    navigation[sektion]();
+    mannschaft: showMannschaft
 }
 
 function initNavigation() {
-    document.querySelectorAll('.navbar-top li.nav-item a').forEach(item => item.addEventListener('click', hauptnavigation));
+    initHauptnavigation(navigationFunctions);
+
     document.querySelector('#naechsterTag').addEventListener('click', naechsterTag);
     document.querySelector('#spieleSpieltag').addEventListener('click', spieleSpieltag);
 }
 
 /* ----- init ----- */
 export async function init() {
-    document.querySelector('div.rechte-seite #managername').textContent = data.manager.name;
-    document.querySelector('div.rechte-seite #aktuellesdatum').textContent = formatDatum(data.aktuellesDatum);
-    
     initNavigation();
     await initData();
 
     fuegeSpielerZuMannschaftenHinzu();
     erstelleStartelfs();
     erzeugeSaisons();
+
+    navigationFunctions[Object.keys(navigationFunctions)[0]]();
+    
+    document.querySelector('div.rechte-seite #managername').textContent = data.manager.name;
+    document.querySelector('div.rechte-seite #aktuellesdatum').textContent = formatDatum(data.aktuellesDatum);
 }
 
 async function initData() {
