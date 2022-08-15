@@ -57,32 +57,35 @@ export function createCell(text, emphasizes = [], id = false, draggable = false)
         if (id) {
             const rueckennummer = id.split('-')[1]
             cellNode.setAttribute('id', id);
-            cellNode.addEventListener('dragend', (ev) => {
-                ev.target.classList.remove('dragging');
-            })
-            cellNode.addEventListener('dragstart', (ev) => {
-                ev.target.classList.add('dragging');
-                ev.effectAllowed = 'move';
-                ev.dataTransfer.setData('text/plain', ev.target.id);
 
-                const canvas = document.createElement('canvas');
-                document.body.append(canvas);
-                const context = canvas.getContext('2d');
-                context.font = '20px Helvetica';
-                context.textAlign = 'center';
-                context.textBaseline = 'middle';
-                context.beginPath();
-                context.arc(25, 25, 25, 0, Math.PI * 2);
-                context.fillStyle = getComputedStyle(canvas).getPropertyValue('--light');
-                context.fill();
-                context.strokeStyle = context.fillStyle;
-                context.stroke();
-                context.closePath();
-                context.fillStyle = getComputedStyle(canvas).getPropertyValue('--textcolor');
-                context.fillText(rueckennummer, 25, 25);
+            if (draggable) {
+                cellNode.addEventListener('dragend', (ev) => {
+                    ev.target.classList.remove('dragging');
+                })
+                cellNode.addEventListener('dragstart', (ev) => {
+                    ev.target.classList.add('dragging');
+                    ev.effectAllowed = 'move';
+                    ev.dataTransfer.setData('text/plain', ev.target.id);
 
-                ev.dataTransfer.setDragImage(canvas, 60, 60);
-            });
+                    const canvas = document.createElement('canvas');
+                    document.body.append(canvas);
+                    const context = canvas.getContext('2d');
+                    context.font = '20px Helvetica';
+                    context.textAlign = 'center';
+                    context.textBaseline = 'middle';
+                    context.beginPath();
+                    context.arc(25, 25, 25, 0, Math.PI * 2);
+                    context.fillStyle = getComputedStyle(canvas).getPropertyValue('--light');
+                    context.fill();
+                    context.strokeStyle = context.fillStyle;
+                    context.stroke();
+                    context.closePath();
+                    context.fillStyle = getComputedStyle(canvas).getPropertyValue('--textcolor');
+                    context.fillText(rueckennummer, 25, 25);
+
+                    ev.dataTransfer.setDragImage(canvas, 60, 60);
+                });
+            }
         }
         if (draggable) {
             cellNode.setAttribute('draggable', true);
@@ -162,4 +165,25 @@ export function createClickHandler(navigationContainer, navigationFunctions) {
         const sektion = event.target.href.split('#')[1];
         navigationFunctions[sektion]();
     }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export function ermittlePosition(spieler) {
+    return ermittleBestePositionAusSpielstaerke(spieler.spielstaerke);
+}
+
+export function ermittleBestePositionAusSpielstaerke(spielstaerke) {
+    return Object.keys(spielstaerke).reduce((a, b) => spielstaerke[a] > spielstaerke[b] ? a : b);
 }

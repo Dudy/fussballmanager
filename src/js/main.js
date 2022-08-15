@@ -1,4 +1,4 @@
-import { randomDate, randomInt, randomBool, shuffle, formatDatum, createClickHandler, initHauptnavigation } from './utils.js';
+import { randomDate, randomInt, randomBool, shuffle, formatDatum, createClickHandler, initHauptnavigation, ermittlePosition, ermittleBestePositionAusSpielstaerke } from './utils.js';
 import { data, aktuelleSaison, istSpieltag, getSpieltagIndex, getLetztenSpieltagIndex } from './data.js';
 import { show as showUebersicht } from './spieltag/uebersicht.js';
 import { show as showAufstellung } from './spieltag/aufstellung.js';
@@ -48,19 +48,33 @@ async function initData() {
 }
 
 function erzeugeSpieler(rueckennummer, startDate, endDate, istTorwart) {
+    const spielstaerke = {
+        tor: istTorwart ? randomInt(30, 100) : randomInt(0, 30),
+        verteidigung: istTorwart ? randomInt(0, 30) : randomInt(30, 100),
+        mittelfeld: istTorwart ? randomInt(0, 30) : randomInt(30, 100),
+        angriff: istTorwart ? randomInt(0, 30) : randomInt(30, 100)
+    };
     return {
         rueckennummer: rueckennummer,
         name:
             data.namen.vornamen[randomInt(0, data.namen.vornamen.length)] +
             " " +
             data.namen.nachnamen[randomInt(0, data.namen.nachnamen.length)],
-        spielstaerke: {
-            tor: istTorwart ? randomInt(30, 100) : randomInt(0, 30),
-            verteidigung: istTorwart ? randomInt(0, 30) : randomInt(30, 100),
-            mittelfeld: istTorwart ? randomInt(0, 30) : randomInt(30, 100),
-            angriff: istTorwart ? randomInt(0, 30) : randomInt(30, 100)
-        },
-        geburtsdatum: randomDate(startDate, endDate)
+        spielstaerke: spielstaerke,
+        geburtsdatum: randomDate(startDate, endDate),
+        trainingsfokus: ermittleBestePositionAusSpielstaerke(spielstaerke),
+        // trainingsfortschritt: {
+        //     tor: 0,
+        //     verteidigung: 0,
+        //     mittelfeld: 0,
+        //     angriff: 0
+        // }
+        trainingsfortschritt: {
+            tor: randomInt(0, 30),
+            verteidigung: randomInt(0, 30),
+            mittelfeld: randomInt(0, 30),
+            angriff: randomInt(0, 30)
+        }
     };
 }
 

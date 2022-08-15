@@ -13,8 +13,8 @@
         [x] aktuelle Tabelle
         [x] Spiele des Spieltags
         [x] Aufstellung meiner Mannschaft
-[ ] Mannschaft
-        [o] Individualtraining (Spieler)
+[o] Mannschaft
+        [x] Individualtraining (Spieler)
         [ ] Teamtraining
         [ ] Transfermarkt
         [ ] Mitarbeiter (Coach, Cotrainer, Physio, Arzt, Marketing)
@@ -40,6 +40,7 @@
                         - Level 3: Querpass
                 [ ] Vorschau
 [x] erstelle eine Spielstatistik, das ist einfach jede Ballaktion als kleiner Text
+[!] Trainingsfortschritt pro Tag aktualisieren
 
 ----- interne Logik
 [x] lagere Daten (Mannschaftsnamen) in eine Datei aus und lese sie separat ein
@@ -70,6 +71,9 @@
         [ ] Die Spalte "Stärken" soll dabei die verschiedenen Arten T, V, M und A durchiterieren. Die aktuelle Art soll im Header fett sein.
 [x] Drag'n'Drop für Spieler aus der Mannschaft in die Startelf ...
         [ ] ... und umgekehrt
+[!] Tastenkombinationen für "Mannschaft" - "Individualtraining"
+        [ ] Hoch/Runter wählt Spieler der Mannschaft
+        [ ] Rechts/Links ändert Trainingsfokus
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Commit Notizen
 - 

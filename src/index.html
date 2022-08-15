@@ -228,34 +228,10 @@
                 <div class="mannschaft">
                     <p>Mannschaft</p>
                     <div class="mannschaftstabelle">
-                        <column>
-                            <cell>#</cell>
-                            <cell>1</cell>
-                            <cell>2</cell>
-                            <cell>3</cell>
-                            <cell>4</cell>
-                        </column>
-                        <column>
-                            <cell>Spieler</cell>
-                            <cell>Tim Tam</cell>
-                            <cell>Sing Sang</cell>
-                            <cell>Riff Raff</cell>
-                            <cell>Quill Quall</cell>
-                        </column>
-                        <column>
-                            <cell>beste Position</cell>
-                            <cell>Tor</cell>
-                            <cell>Abwehr</cell>
-                            <cell>Mittelfeld</cell>
-                            <cell>Sturm</cell>
-                        </column>
-                        <column>
-                            <cell>Stärken (T/V/M/A)</cell>
-                            <cell>1/0/0/0</cell>
-                            <cell>0/1/0/0</cell>
-                            <cell>0/0/1/0</cell>
-                            <cell>0/0/0/1</cell>
-                        </column>
+                        <column class="right-aligned-children rueckennummer" data-type="rueckennummer"></column>
+                        <column class="left-aligned-children spielername" data-type="spielername"></column>
+                        <column class="left-aligned-children position" data-type="position"></column>
+                        <column class="left-aligned-children staerke" data-type="staerke"></column>
                     </div>
                 </div>
                 <div class="spieler">
@@ -268,12 +244,26 @@
                             <cell>Mittelfeld</cell>
                             <cell>Angriff</cell>
                         </column>
-                        <column>
+                        <column class="spielerstaerke center-aligned-children">
                             <cell>Stärken</cell>
                             <cell>1</cell>
                             <cell>0</cell>
                             <cell>0</cell>
                             <cell>0</cell>
+                        </column>
+                        <column class="trainingsfokus center-aligned-children">
+                            <cell>Fokus</cell>
+                            <cell><input type="radio" id="trainingsfokus-tor" name="trainingsfokus" value="tor"></cell>
+                            <cell><input type="radio" id="trainingsfokus-verteidigung" name="trainingsfokus" value="verteidigung"></cell>
+                            <cell><input type="radio" id="trainingsfokus-mittelfeld" name="trainingsfokus" value="mittelfeld"></cell>
+                            <cell><input type="radio" id="trainingsfokus-angriff" name="trainingsfokus" value="angriff"></cell>
+                        </column>
+                        <column class="trainingsfortschritt center-aligned-children">
+                            <cell>Fortschritt</cell>
+                            <cell>0 %</cell>
+                            <cell>0 %</cell>
+                            <cell>0 %</cell>
+                            <cell>0 %</cell>
                         </column>
                     </div>
                 </div>

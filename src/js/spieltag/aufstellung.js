@@ -1,6 +1,6 @@
 import { data } from '../data.js';
 import { init as initSubnavigation } from './subnavigation.js';
-import { createCell, padWithZero } from '../utils.js';
+import { createCell, padWithZero, ermittlePosition } from '../utils.js';
 
 const RUECKENNUMMER_ID_PREFIX = 'rueckennummer-';
 
@@ -60,9 +60,6 @@ export function show() {
     }
 }
 
-function ermittlePosition(spieler) {
-    return Object.keys(spieler.spielstaerke).reduce((a, b) => spieler.spielstaerke[a] > spieler.spielstaerke[b] ? a : b);
-}
 function drop_handler(ev) {
     ev.preventDefault();
     const id = ev.dataTransfer.getData('text/plain');
