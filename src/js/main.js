@@ -63,12 +63,6 @@ function erzeugeSpieler(rueckennummer, startDate, endDate, istTorwart) {
         spielstaerke: spielstaerke,
         geburtsdatum: randomDate(startDate, endDate),
         trainingsfokus: ermittleBestePositionAusSpielstaerke(spielstaerke),
-        // trainingsfortschritt: {
-        //     tor: 0,
-        //     verteidigung: 0,
-        //     mittelfeld: 0,
-        //     angriff: 0
-        // }
         trainingsfortschritt: {
             tor: randomInt(0, 30),
             verteidigung: randomInt(0, 30),
@@ -184,9 +178,9 @@ function erzeugeSaisons() {
 function spielSpielen(heimindex, gastindex) {
     const HEIM = true
     const GAST = false
-    const HEIMDRITTEL = 0;
-    const MITTELFELD = 1;
-    const GASTDRITTEL = 2;
+    const HEIMDRITTEL = 'Heimdrittel';
+    const MITTELFELD = 'Mittelfeld';
+    const GASTDRITTEL = 'Gastdrittel';
     const OFFENSIVE_GRENZE = 0.25; // muss < 1.0 sein
     const DEFENSIVE_GRENZE = 0.75; // muss < 1.0 sein
 
@@ -793,7 +787,11 @@ function spieleSpieltag() {
 }
 
 function naechsterTag() {
+    // Daten aktualisieren
+    // TODO: alle Spiele von "gestern" austragen ausser das des Managers (=data.letztesSpiel)
     data.aktuellesDatum.setDate(data.aktuellesDatum.getDate() + 1);
+
+    // UI aktualisieren
     document.querySelector('div.rechte-seite #aktuellesdatum').textContent = formatDatum(data.aktuellesDatum);
     if (istSpieltag(data.aktuellesDatum)) {
         showAufstellung();

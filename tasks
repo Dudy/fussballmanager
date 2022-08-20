@@ -54,6 +54,8 @@
         [ ] Umstellen der "Spieltag"-Subnavigation
         [x] Umstellen der "Mannschaft"-Subnavigation
         [ ] bei Subnavigation soll das gesamte <li> klickbar sein, nicht nur der <a>
+[ ] mache die Startelf-Properties (LA, RA, usw.) zu number (anstatt string)
+[ ] Beschreibung der Datenobjekte in readme
 
 ----- UI
 [x] mache die Spalten immer gleich groß (Tabelle und Spieltag)

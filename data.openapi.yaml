@@ -1,0 +1,87 @@
+openapi: 3.0.3
+info:
+  title: Pomis Fussball Manager
+  description: |-
+    Ein Fussball Manager.
+    
+    Some useful links:
+    - [das Github Repository](https://github.com/Dudy/fussballmanager)
+    - [die Datenstrukturen (interne Komponenten und REST-API)](https://github.com/Dudy/fussballmanager/data.openapi.yaml)
+  contact:
+    email: games@pomis.de
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.0.1
+components:
+  schemas:
+    Data:
+      type: object
+      properties:
+        aktuellesDatum:
+          type: string
+          format: date
+          example: 2022-06-05T00:00:00Z
+        manager:
+          $ref: '#/components/schemas/Manager'
+        saisons:
+          type: array
+          items:
+            type: todo
+        aktuelleSaison:
+          type: integer
+          format: int64
+        aktuellerSpieltag:
+          type: integer
+          format: int64
+        statistiklevel:
+          type: integer
+          format: int64
+        mannschaften:
+          0:
+            $ref: '#/components/schemas/Manager'
+          1:
+            $ref: '#/components/schemas/Manager'
+          2:
+            $ref: '#/components/schemas/Manager'
+          3:
+            description:
+              TODO: das ist ja richtig schlecht, ich wollte eh die komischen Indexe wegnehmen und ein Array drauf machen
+    Manager:
+      type: object
+      properties:
+        name:
+          type: string
+        mannschaft:
+          type: integer
+          format: int64
+    Mannschaft:
+      type: object
+      properties:
+        name:
+          type: string
+        startelf:
+          type: object
+          properties:
+            LA:
+              type: string
+            RA:
+              type: string
+            LM:
+              type: string
+            LZM:
+              type: string
+            RZM:
+              type: string
+            RM:
+              type: string
+            LV:
+              type: string
+            LIV:
+              type: string
+            RIV:
+              type: string
+            RV:
+              type: string
+            TW:
+              type: string
