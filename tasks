@@ -40,7 +40,7 @@
                         - Level 3: Querpass
                 [ ] Vorschau
 [x] erstelle eine Spielstatistik, das ist einfach jede Ballaktion als kleiner Text
-[!] Trainingsfortschritt pro Tag aktualisieren
+[o] Trainingsfortschritt pro Tag aktualisieren
 
 ----- interne Logik
 [x] lagere Daten (Mannschaftsnamen) in eine Datei aus und lese sie separat ein
@@ -76,6 +76,12 @@
 [!] Tastenkombinationen für "Mannschaft" - "Individualtraining"
         [ ] Hoch/Runter wählt Spieler der Mannschaft
         [ ] Rechts/Links ändert Trainingsfokus
+[ ] in Spieltagsübersicht
+        [ ] Klick auf Zeile in "Tabelle" highlighted die Zeile und wählt das Ergebnis des Spiels im "Spieltag" rechts aus
+        [ ] Klick auf Zeile in "Spieltag" rechts wählt highlighted diese Zeile und beide Mannschaften in der "Tabelle" links
+        [ ] In jedem Fall wird unterhalb des Fensters das Log des jeweiligen Spiels gezeigt (in geringster Detailtiefe)
+[ ] in Mannschaft
+        [ ] beim Individualtraining soll die ganze Zeile der Tabelle "Mannschaft" klickbar sein, nicht nur der Name
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Commit Notizen
 - 
