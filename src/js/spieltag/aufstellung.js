@@ -5,6 +5,7 @@ import { createCell, padWithZero, ermittlePosition } from '../utils.js';
 const RUECKENNUMMER_ID_PREFIX = 'rueckennummer-';
 
 export function show() {
+    // Navigation
     initSubnavigation('aufstellung');
     
     const aufstellungElement = document.querySelector('#spieltagAufstellungTemplate').content.cloneNode(true);

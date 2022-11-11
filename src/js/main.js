@@ -1,5 +1,5 @@
 import { randomDate, randomInt, randomBool, shuffle, formatDatum, createClickHandler, initHauptnavigation, ermittlePosition, ermittleBestePositionAusSpielstaerke } from './utils.js';
-import { data, aktuelleSaison, istSpieltag, getSpieltagIndex, getLetztenSpieltagIndex } from './data.js';
+import { data, istSpieltag } from './data.js';
 import { show as showUebersicht } from './spieltag/uebersicht.js';
 import { show as showAufstellung } from './spieltag/aufstellung.js';
 import { show as showLetztesSpiel } from './spieltag/letztesSpiel.js';
@@ -15,7 +15,7 @@ function initNavigation() {
     initHauptnavigation(navigationFunctions);
 
     document.querySelector('#naechsterTag').addEventListener('click', naechsterTag);
-    document.querySelector('#spieleSpieltag').addEventListener('click', spieleSpieltag);
+    document.querySelector('#spieleAustragen').addEventListener('click', spieleAustragen);
 }
 
 /* ----- init ----- */
@@ -25,12 +25,13 @@ export async function init() {
 
     fuegeSpielerZuMannschaftenHinzu();
     erstelleStartelfs();
-    erzeugeSaisons();
+    
+    erzeugeSpiele(); // der aktuellen Saison
 
     navigationFunctions[Object.keys(navigationFunctions)[0]]();
     
     document.querySelector('div.rechte-seite #managername').textContent = data.manager.name;
-    document.querySelector('div.rechte-seite #aktuellesdatum').textContent = formatDatum(data.aktuellesDatum);
+    document.querySelector('div.rechte-seite #aktuellesdatum').textContent = formatDatum(data.heute);
 }
 
 async function initData() {
@@ -78,7 +79,7 @@ function fuegeSpielerZuMannschaftenHinzu() {
     const endDate = new Date(today.getTime() - 1000 * 60 * 60 * 24 * 365 * 16); // min. 16 Jahre alt
     
     for (const mannschaft of Object.values(data.mannschaften)) {
-        // ein Array mit den zufällig verteilten Zahlen von 1 bis 99 (1 ist immer an erster Stelle, für den ersten Torwart ;-))
+        // ein Array mit den zufällig verteilten Zahlen von 1 bis 99, aber 1 ist immer an erster Stelle, für den ersten Torwart ;-)
         let rueckennummern = [1].concat(shuffle(Array.from({length: 98}, (_, i) => i + 2)));
         mannschaft.spieler = [];
         mannschaft.spielerNachRueckennummer = {};
@@ -142,40 +143,25 @@ function erstelleStartelfs() {
     }
 }
 
-function erzeugeSaisons() {
-    data.saisons = {
-        2022: {
-        saison: "2022/2023",
-        startdatum: new Date("2022-08-06T13:30:00Z"),
-        spieltage: {}
-        }
-    };
-
-    const saison = aktuelleSaison();
-    let datum = saison.startdatum;
-
+function erzeugeSpiele() {
+    let datum = Date.UTC(2022, 7, 6); // Termin erster Spieltag in 2022/2023 ist 06.08.2022
     for (let spieltagIndex = 0; spieltagIndex < data.anzahlSpieltage; spieltagIndex++) {
-        const spieltag = {
-            spiele: {}
-        };
-        saison.spieltage[spieltagIndex] = spieltag;
-
-        const spieltagspaarungen = data.spieltage[spieltagIndex];
-        for (let spielIndex = 0; spielIndex < spieltagspaarungen.length; spielIndex++) {
-            spieltag.spiele[spielIndex] = {
+        data.spiele[datum] = [];
+        for (const { heim, gast } of data.spieltage[spieltagIndex]) {
+            data.spiele[datum].push({
                 datum: new Date(datum),
-                heim: spieltagspaarungen[spielIndex].heim,
-                gast: spieltagspaarungen[spielIndex].gast,
+                heim: heim,
+                gast: gast,
                 toreHeim: -1,
                 toreGast: -1
-            };
+            });
         }
 
-        datum.setDate(datum.getDate() + 7);
+        datum += 7 * 86400 * 1000;
     }
 }
 
-function spielSpielen(heimindex, gastindex) {
+function einSpielSpielen(heimindex, gastindex) {
     const HEIM = true
     const GAST = false
     const HEIMDRITTEL = 'Heimdrittel';
@@ -762,7 +748,25 @@ function spielSpielen(heimindex, gastindex) {
     return [heimtore, gasttore, statistik]
 }
 
-function spieleSpieltag() {
+function spieleAustragen() {
+    const spieleHeute = data.spiele[data.heute];
+    if (spieleHeute) {
+        spieleHeute.forEach(spiel => {
+            console.log(spiel);
+            const [heimtore, gasttore, statistik] = einSpielSpielen(spieltagspaarungen[spielIndex].heim, spieltagspaarungen[spielIndex].gast)
+            spiel.toreHeim = heimtore;
+            spiel.toreGast = gasttore;
+            spiel.statistik = statistik;
+
+            if (spiel.heim === data.manager.mannschaft || spiel.gast === data.manager.mannschaft) {
+                data.letztesSpiel = spiel;
+            }
+        });
+    }
+
+    showUebersicht();
+
+/*
     const saison = aktuelleSaison();
     const spieltagIndex = getSpieltagIndex(data.aktuellesDatum);
     const spieltagspaarungen = data.spieltage[spieltagIndex];
@@ -779,25 +783,52 @@ function spieleSpieltag() {
     }
 
     document.querySelector('#naechsterTag').style.display = 'block';
-    document.querySelector('#spieleSpieltag').style.display = 'none';
+    document.querySelector('#spieleAustragen').style.display = 'none';
 
     data.aktuellerSpieltag = getLetztenSpieltagIndex(data.aktuellesDatum);
     
     showLetztesSpiel();
+*/
 }
 
 function naechsterTag() {
-    // Daten aktualisieren
-    // TODO: alle Spiele von "gestern" austragen ausser das des Managers (=data.letztesSpiel)
-    data.aktuellesDatum.setDate(data.aktuellesDatum.getDate() + 1);
+    // der Button ist nur sichtbar, wenn es *kein* eigener Spieltag ist (s.u.), also trage nun alle Spiele aus
+    spieleAustragen();
+    // einen Tag voranschreiten
+    data.heute += 86400 * 1000;
 
     // UI aktualisieren
-    document.querySelector('div.rechte-seite #aktuellesdatum').textContent = formatDatum(data.aktuellesDatum);
-    if (istSpieltag(data.aktuellesDatum)) {
-        showAufstellung();
+    document.querySelector('div.rechte-seite #aktuellesdatum').textContent = formatDatum(data.heute);
+
+    console.log("1");
+    if (istSpieltag(data.heute)) {
+        console.log("Dies ist ein Spieltag.");
+    }
+
+    console.log("2");
+    if (istSpieltag(data.heute)) {
         document.querySelector('#naechsterTag').style.display = 'none';
-        document.querySelector('#spieleSpieltag').style.display = 'block';
+        document.querySelector('#spieleAustragen').style.display = 'block';
+        showAufstellung();
     } else {
+        document.querySelector('#naechsterTag').style.display = 'block';
+        document.querySelector('#spieleAustragen').style.display = 'none';
         showUebersicht();
     }
+
+    /*
+    if (istSpieltag(data.aktuellesDatum)) {
+        document.querySelector('#naechsterTag').style.display = 'none';
+        document.querySelector('#spieleAustragen').style.display = 'block';
+        showAufstellung();
+    } else {
+        spieleAustragen();
+        // einen Tag voranschreiten
+        data.aktuellesDatum.setDate(data.aktuellesDatum.getDate() + 1);
+        // UI aktualisieren
+        document.querySelector('div.rechte-seite #aktuellesdatum').textContent = formatDatum(data.aktuellesDatum);
+        document.querySelector('#naechsterTag').style.display = 'block';
+        document.querySelector('#spieleAustragen').style.display = 'none';
+    }
+    */
 }

@@ -100,7 +100,7 @@ section#actionbar button {
     min-width: 14rem;
 }
 
-section#actionbar button#spieleSpieltag {
+section#actionbar button#spieleAustragen {
     display: none;
 }
 /* ----- loader ----- */

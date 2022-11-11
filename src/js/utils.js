@@ -29,12 +29,6 @@ export function formatDatum(datum) {
     }
 }
 
-export function amSelbenTag(datum0, datum1) {
-    return datum0.getFullYear() === datum1.getFullYear() &&
-    datum0.getMonth() === datum1.getMonth() &&
-    datum0.getDate() === datum1.getDate();
-}
-
 export function padWithZero(num, targetLength) {
     return String(num).padStart(targetLength, '0');
 }

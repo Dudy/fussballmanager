@@ -13,6 +13,8 @@ es enthält Javascript-Unterobjekte. Das Format sieht etwa so aus:
         name: <string>,
         mannschaft: <number>
     },
+    
+    /*
     saisons: [
         <number, format "numerische ID", description "Jahr">: {
             saison: <string, format "Anfangsjahr/Endjahr", example "2022/2023">,
@@ -44,6 +46,31 @@ es enthält Javascript-Unterobjekte. Das Format sieht etwa so aus:
             }
         }
     ],
+    */
+    
+    spiele: { // Hashmap aller Spiele: Key ist Spieldatum, Value ist Liste aller Spiele an diesem Datum
+        <string, format "ISO-Datum kurz yyyy-mm-dd">: [{
+            datum: <date>,
+            heim: <number>,
+            gast: <number>,
+            toreHeim: <number>,
+            toreGast: <number>,
+            statistik: [
+                {
+                    halbzeit: <number, format "0 oder 1">,
+                    minute: <number, format "0 bis 90">,
+                    ballbesitzVorher: <boolean, format "Heim = true, Gast = false">,
+                    ballbesitzNachher: <boolean, s.o.>,
+                    ballpositionVorher: <string, enum "Heimdrittel, Mittelfeld oder Gastdrittel">,
+                    ballpositionNachher: <string, s.o.>,
+                    text: <string>,
+                    level: <number, format "0 bis 4", description "0 = wenig Ausgabe, 4 = sehr viel Ausgabe">
+                }
+            ]
+        }]
+    },
+
+
     aktuelleSaison: <number>,
     aktuellerSpieltag: <number>,
     statistiklevel: <number>,
@@ -120,3 +147,31 @@ es enthält Javascript-Unterobjekte. Das Format sieht etwa so aus:
   - Das Datum oben rechts auf der oberen Navigationsleiste wird aktualisiert.
   - Wenn heute ein Spieltag ist, wechselt die Ansicht zur "Aufstellung".
   - Wenn heute kein Spieltag ist, wechselt die Ansicht zur "Übersicht".
+
+
+
+
+Zustand:
+    - Übersicht eines Spieltages
+Aktion:
+    - Klick auf "Nächster Tag"
+Auswirkung:
+    - Wenn Spieltag (für mich) ist
+        - wechsle Ansicht zu "Aufstellung"
+        - blende "Nächster Tag" aus
+        - blende "Austragen" ein
+    - Wenn kein Spieltag (für mich) ist
+        - führe alle Spiele aus (keine Ausnahme, es gibt kein eigenes Spiel, weil ja kein Spieltag für mich)
+        - erhöhe Datum
+        - zeige Übersicht des Spieltages (Ausgangszustand, nur einen Tag später)
+
+Zustand:
+    - Aufstellung
+Aktion:
+    - Klick auf "Austragen"
+Auswirkung:
+    - führe alle Spiele aus (keine Ausnahme, mein eigenes Spiel soll explizit auch mit ausgetragen werden)
+    - erhöhe Datum
+    - zeige Übersicht des Spieltages (Ausgangszustand, nur einen Tag später)
+    - blende "Nächster Tag" ein
+    - blende "Austragen" aus
